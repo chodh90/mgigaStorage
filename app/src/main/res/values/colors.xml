@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#B01116</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="windowBackground">#FFFFFF</color>
+
+    <color name="baseColor">#ED2024</color>
+    <color name="subColor">#B01116</color>
+    <color name="darkGray">#4C4C4E</color>
+    <color name="lightGray">#D1D2D4</color>
+    <color name="gray">#CCCCCC</color>
+    <color name="backGray">#F5F5F5</color>
+    <color name="lineGray">#F0F0F0</color>
+    <color name="pink">#F9BFBE</color>
+    <color name="disabledGray">#BFBFBF</color>
+    <color name="disabledGrayToNavi">#7F7F7F</color>
+
+    <color name="naviHeader">#3c3c3c</color>
+</resources>

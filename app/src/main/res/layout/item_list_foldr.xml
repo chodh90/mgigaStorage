@@ -1,0 +1,52 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="70dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingLeft="15dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_weight="1"
+        android:id="@+id/item_area">
+
+        <ImageView
+            android:id="@+id/foldrIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ico_36dp_folder_r"
+            android:layout_marginRight="10dp"/>
+
+        <TextView
+            android:id="@+id/foldrNm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="foldrNm"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/foldrId"
+            android:text="foldrId"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/foldrCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ico_36dp_done_disable"
+        android:layout_marginRight="10dp"
+        />
+
+</LinearLayout>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/drawer_menu1"
+            android:icon="@drawable/ico_36dp_device_giganas"
+            android:title="GiGA NAS" />
+        <item
+            android:id="@+id/drawer_menu2"
+            android:icon="@drawable/ico_36dp_device_pc"
+            android:title="PC" />
+
+        <item
+            android:id="@+id/drawer_menu3"
+            android:icon="@drawable/ico_36dp_device_mobile"
+            android:title="Mobile" />
+    </group>
+
+</menu>

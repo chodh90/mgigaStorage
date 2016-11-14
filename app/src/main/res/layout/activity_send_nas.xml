@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:minHeight="60dp"
+        android:background="@color/baseColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <ImageView
+                android:src="@drawable/ico_24dp_top_close"
+                android:id="@+id/topBack"
+                android:layout_gravity = "center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:textSize="18sp"
+                android:layout_marginLeft="5dp"
+                android:text="위치선택"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/backGray">
+
+        <TextView
+            android:text=" > GiGA NAS"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/dirNavi"
+            android:layout_weight="1"
+            android:textColor="@color/darkGray"
+            android:gravity="fill_vertical"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:text="@string/choiceFoldr"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#ffffff"
+        android:textColor="#000000"
+        android:gravity="center_vertical"
+        android:paddingLeft="15dp"
+        android:textSize="16sp"/>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/listview_fragment"
+        android:name="com.kt.gigastorage.mobile.fragment.FoldrFragment"
+        tools:layout="@layout/content_listview"
+        android:layout_weight="1"/>
+
+    <Button
+        android:text="선택 완료"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_confirm"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        />
+</LinearLayout>

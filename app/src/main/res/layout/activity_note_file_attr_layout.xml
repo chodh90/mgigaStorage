@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backGray"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:minHeight="60dp"
+        android:background="@color/baseColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <ImageView
+                android:src="@drawable/ico_24dp_top_back"
+                android:id="@+id/topBack"
+                android:layout_gravity = "center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:textSize="18sp"
+                android:layout_marginLeft="5dp"
+                android:text="파일 속성"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:fillViewport="false">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="vertical"
+                android:layout_marginBottom="2dp"
+                android:background="#fff">
+                <ImageView
+                    android:src="@drawable/main"
+                    android:id="@+id/fileThum"
+                    android:layout_gravity = "center"
+                    android:layout_width="200dp"
+                    android:layout_height="200dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#fff"
+                android:layout_marginBottom="2dp"
+                android:paddingLeft="25dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/fileNm"
+                    android:text="GIGA Storage 차별화 방안.doc"
+                    android:textColor="@color/darkGray"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="#fff"
+                android:layout_marginBottom="2dp"
+                android:paddingTop="5dp">
+
+                <TableLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="12dp">
+                    <TableRow
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:text="크기"
+                            android:textStyle="bold"
+                            android:textColor="@color/darkGray"/>
+                        <TextView
+                            android:id="@+id/fileSize"
+                            android:text="566KB"
+                            android:textColor="@color/darkGray"
+                            android:layout_marginLeft="40dp" />
+                    </TableRow>
+                    <!--<TableRow
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:text="생성자"
+                            android:textStyle="bold"
+                            android:textColor="@color/darkGray"/>
+                        <TextView
+                            android:id="@+id/fileCreator"
+                            android:text="김영은"
+                            android:textColor="@color/darkGray"
+                            android:layout_marginLeft="40dp" />
+                    </TableRow>-->
+                    <TableRow
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginBottom="6dp">
+                        <TextView
+                            android:text="위치"
+                            android:textStyle="bold"
+                            android:textColor="@color/darkGray"/>
+                        <TextView
+                            android:id="@+id/foldrWholePath"
+                            android:text="GIGA NAS > 문서"
+                            android:textColor="@color/darkGray"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="40dp"/>
+                    </TableRow>
+                    <TableRow
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginLeft="25dp">
+                        <TextView
+                            android:text="생성일"
+                            android:textStyle="bold"
+                            android:textColor="@color/darkGray"/>
+                        <TextView
+                            android:id="@+id/cretDate"
+                            android:text="2016-08-25"
+                            android:textColor="@color/darkGray"
+                            android:layout_marginLeft="40dp" />
+                    </TableRow>
+                    <TableRow
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginLeft="25dp">
+                        <TextView
+                            android:text="최종수정일"
+                            android:textStyle="bold"
+                            android:textColor="@color/darkGray"/>
+                        <TextView
+                            android:id="@+id/amdDate"
+                            android:text="2016-08-25"
+                            android:textColor="@color/darkGray"
+                            android:layout_marginLeft="40dp" />
+                    </TableRow>
+                </TableLayout>
+
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/btnSameTimeFile"
+                    android:text="같은 시기 사용된\n파일 더 보기"
+                    android:textColor="@color/darkGray"
+                    android:textSize="12sp"
+                    android:background="@drawable/search_border_style"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="right"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:orientation="vertical"
+                android:background="#ffffff">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:text="Email"
+                    android:textColor="@color/darkGray"/>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:src="@drawable/ico_24dp_info_mail"
+                        android:id="@+id/emailView"
+                        android:layout_marginLeft="33dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/emailTitle"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="7.1dp"
+                        android:text=""
+                        android:textColor="@color/darkGray"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="68dp"
+                    android:id="@+id/emailDate"
+                    android:text=""
+                    android:textColor="@color/darkGray"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/emailNm"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginLeft="68dp"
+                    android:text=""
+                    android:textColor="@color/darkGray"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="#ffffff"
+                android:layout_marginBottom="2dp"
+                android:gravity="right">
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/btnSendFile"
+                    android:text="이 사람이 보낸\n파일 더보기"
+                    android:textSize="12sp"
+                    android:textColor="@color/darkGray"
+                    android:background="@drawable/search_border_style"
+                    android:layout_margin="5dp"
+                    android:layout_marginRight="10dp"/>
+                <Button
+                    android:layout_width="120dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/btnTogetherPerson"
+                    android:text="함께 받은\n사람 보기"
+                    android:textSize="12sp"
+                    android:textColor="@color/darkGray"
+                    android:background="@drawable/search_border_style"
+                    android:layout_margin="5dp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="25dp"
+                android:background="#fff">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:text="관련 BizNote"
+                    android:textColor="@color/darkGray"
+                    android:layout_marginBottom="10dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="-25dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:id="@+id/ascNote1"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:visibility="gone">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ascNoteTxt1"
+                            android:text="[GIGA Storage 기획]"
+                            android:textColor="@color/darkGray"/>
+                        <ImageView
+                            android:src="@drawable/main"
+                            android:id="@+id/ascNoteImg1"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:id="@+id/ascNote2"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal"
+                        android:visibility="gone">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ascNoteTxt2"
+                            android:text="[GIGA Storage 기획]"
+                            android:textColor="@color/darkGray"/>
+                        <ImageView
+                            android:src="@drawable/main"
+                            android:id="@+id/ascNoteImg2"
+                            android:layout_width="150dp"
+                            android:layout_height="150dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

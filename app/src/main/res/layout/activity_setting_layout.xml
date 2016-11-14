@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backGray"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:minHeight="60dp"
+        android:background="@color/baseColor">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <ImageView
+                android:src="@drawable/ico_24dp_top_close"
+                android:id="@+id/topBack"
+                android:layout_gravity = "center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:textSize="18sp"
+                android:layout_marginLeft="5dp"
+                android:text="설정"
+                android:textColor="#ffffff"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingLeft="25dp"
+            android:paddingTop="30dp"
+            android:textStyle="bold"
+
+            android:textSize ="15sp"
+            android:background="@color/backGray"
+            android:id="@+id/name_input"
+            android:text="로그인 설정"
+
+            android:textColor="@color/darkGray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            android:background="@drawable/setting_border_style"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:textSize ="15sp"
+                android:text="로그인 정보"
+                android:textColor="@color/darkGray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:gravity="right|center_vertical"
+                android:paddingRight="25dp"
+                android:textSize ="15sp"
+                android:id="@+id/loginId"
+                android:text=""
+                android:layout_weight="1"
+                android:textColor="@color/darkGray"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            android:background="@drawable/setting_border_style"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:textSize ="15sp"
+                android:id="@+id/auto_login"
+                android:text="자동 로그인"
+                android:layout_weight="1"
+                android:textColor="@color/darkGray" />
+
+                <ToggleButton
+                    android:text="ToggleButton"
+                    android:layout_width="55dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/toggle_selector"
+                    android:id="@+id/toggleButton1"
+                    android:textOn=""
+                    android:textOff=""
+                    android:layout_marginRight="25dp"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            android:background="@drawable/setting_border_style"
+            android:id="@+id/logout"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:textSize ="15sp"
+                android:layout_weight="1"
+                android:text="로그아웃"
+
+                android:textColor="@color/darkGray" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp">
+
+                <ImageView
+                    android:src="@drawable/ico_36dp_nxt"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:paddingLeft="25dp"
+            android:paddingTop="30dp"
+            android:textStyle="bold"
+
+            android:textSize ="15sp"
+            android:id="@+id/device_setting"
+            android:background="@color/backGray"
+            android:text="디바이스 설정"
+            android:textColor="@color/darkGray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:orientation="horizontal"
+            android:background="@drawable/setting_border_style"
+            android:id="@+id/nameSetting"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="25dp"
+                android:textSize ="15sp"
+                android:layout_weight="1"
+                android:text="디바이스 이름 변경"
+
+                android:textColor="@color/darkGray" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp">
+                <ImageView
+                    android:src="@drawable/ico_36dp_nxt"
+                    android:id="@+id/toggleButton3"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_border_style">
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

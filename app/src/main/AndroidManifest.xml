@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.kt.gigastorage.mobile.activity">
+
+    <uses-permission android:name="android.permission.INTERNET"/> <!-- 인터넷 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> <!-- WIFI -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/> <!-- 네트워크 -->
+    <uses-permission android:name="android.permission.ACCESS_ALL_DOWNLOADS"/> <!-- 네트워크 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/> <!-- 디바이스 정보 -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/> <!-- 블루투스 디바이스 네임 필요 -->
+
+    <!--외부저장장치에 저장-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- [START gcm_permission] -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- [END gcm_permission] -->
+
+    <application
+        android:largeHeap="true"
+        android:allowBackup="true"
+        android:icon="@mipmap/ico_launcher"
+        android:label="GIGA\nSTORAGE"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".IntroActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>\
+        <activity android:name=".MainActivity"/>
+        <activity android:name=".DrawerLayoutViewActivity"/>
+        <activity android:name=".FileAttrViewActivity"/>
+        <activity android:name=".DevNmSettingViewActivity"/>
+        <activity android:name=".FileSearchViewActivity"/>
+        <activity android:name=".SettingViewActivity"/>
+        <activity android:name=".SendNasViewActivity" />
+        <activity android:name=".TagEditActivity" />
+        <activity android:name=".NoteFileAttrViewActivity" />
+        <activity android:name=".TempActivity"/>
+        <activity android:name=".PopupDevNmActivity"
+                  android:theme="@android:style/Theme.Dialog"
+                  android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".PopupCcActivity"
+                  android:theme="@android:style/Theme.Dialog"
+                  android:screenOrientation="portrait">
+        </activity>
+        <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+
+        <!-- [START gcm_receiver] -->
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.kt.gigastorage.mobile.activity" />
+            </intent-filter>
+        </receiver>
+        <!-- [END gcm_receiver] -->
+
+        <!-- [START gcm_listener] -->
+        <service
+            android:name="com.kt.gigastorage.mobile.gcm.GigaGcmListenerService"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <!-- [END gcm_listener] -->
+        <!-- [START instanceId_listener] -->
+        <service
+            android:name="com.kt.gigastorage.mobile.gcm.GigaInstanceIDListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID"/>
+            </intent-filter>
+        </service>
+        <!-- [END instanceId_listener] -->
+        <service
+            android:name="com.kt.gigastorage.mobile.gcm.GigaRegistrationIntentService"
+            android:exported="false">
+        </service>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+    </application>
+
+
+
+
+</manifest>

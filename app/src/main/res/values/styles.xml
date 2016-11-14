@@ -1,0 +1,25 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
+    <style name="AppTheme.ToolBar_Popup" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:textColorPrimary">#000</item> <!--overflow menu text color-->
+        <item name="android:background">#fff</item> <!--overflow menu background-->
+        <item name="android:listChoiceIndicatorSingle">@drawable/radiobutton_style</item>
+    </style>
+
+    <style name="checkBoxStyle" parent="Base.Theme.AppCompat">
+        <item name="colorAccent">#FF0000</item>
+        <item name="android:textColorSecondary">@color/lightGray</item>
+    </style>
+
+</resources>

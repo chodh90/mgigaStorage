@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingLeft="50dp"
+              android:paddingRight="50dp"
+              android:paddingTop="50dp"
+              android:orientation="horizontal"
+              android:background="#ffffff"
+              android:id="@+id/background"
+              app:layout_behavior="@string/appbar_scrolling_view_behavior"
+              tools:context="com.kt.gigastorage.mobile.activity.MainActivity"
+              tools:showIn="@layout/activity_main">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:src="@drawable/m_login_gigastorage"
+            android:id="@+id/imageView2"
+
+            android:layout_marginBottom="50dp"
+            android:layout_marginTop="30dp"
+            />
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:id="@+id/input_id"
+            android:textColor="@color/darkGray"
+            android:background="@drawable/lost_focus_border_style"
+            android:hint="아이디"
+            android:textColorHint="@color/lightGray"
+            android:layout_above="@+id/btn_login"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:id="@+id/input_pwd"
+            android:textColor="@color/darkGray"
+            android:background="@drawable/lost_focus_border_style"
+            android:hint="비밀번호"
+            android:textColorHint="@color/lightGray"
+            android:inputType="textPassword"
+            android:layout_alignBottom="@+id/input_id"
+            android:layout_alignLeft="@+id/input_id"
+            android:layout_alignStart="@+id/input_id"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_horizontal"/>
+
+        <TextView
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/errorMsg"
+            android:text=""
+            android:layout_marginTop="20dp"
+            android:textColor="@color/baseColor"
+            android:textSize="14sp"/>
+
+        <LinearLayout
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="20dp"
+            android:textAlignment="gravity">
+
+            <ToggleButton
+                android:text="ToggleButton"
+                android:layout_width="44dp"
+                android:layout_height="24dp"
+                android:background="@drawable/toggle_selector"
+                android:id="@+id/toggleButton1"
+                android:textOn=""
+                android:textOff=""
+                android:layout_marginRight="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="자동로그인"
+                android:textSize="16sp"
+                android:textColor="@color/darkGray"/>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="45dp"
+            android:text="로그인"
+            android:id="@+id/btn_login"
+            android:background="@color/darkGray"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:textAllCaps="false"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"/>
+
+    </LinearLayout>
+</LinearLayout>
