@@ -15,11 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.kt.gigastorage.mobile.service.AlertDialogService;
 import com.kt.gigastorage.mobile.service.ResponseFailCode;
 import com.kt.gigastorage.mobile.utils.SharedPreferenceUtil;
 import com.kt.gigastorage.mobile.vo.DevBasVO;
