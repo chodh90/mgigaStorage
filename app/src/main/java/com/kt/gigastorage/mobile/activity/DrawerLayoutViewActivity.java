@@ -163,7 +163,16 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
                         bizNote.put("devUuid", "");
                         bizNote.put("devNm", "BizNote");
                         bizNote.put("osCd", "B");
+                        /* 로그아웃 하드코딩 */
+                        Map<String, String> logOut = new ArrayMap<String, String>();
+                        logOut.put("userId",mListData.get(0).get("userId"));
+                        logOut.put("userName", mListData.get(0).get("userName"));
+                        logOut.put("devUuid", "");
+                        logOut.put("devNm", "로그아웃");
+                        logOut.put("osCd", "L");
+
                         mListData.add(bizNote);
+                        mListData.add(logOut);
                         mAdapter.notifyDataSetChanged();
                     }else if(statusCode == 400){
                         alert.setMessage(message);
@@ -295,17 +304,32 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
 
             clickPos = position;
             mAdapter.notifyDataSetChanged();
-            setToolbarTitle(data.get("devNm"));
 
-            if(!data.get("osCd").equals("B")) { // bizNote가 아니면
-
+            if(!data.get("osCd").equals("B") && !data.get("osCd").equals("L")) { // bizNote가 아니면
+                setToolbarTitle(data.get("devNm"));
                 Bundle args = new Bundle();
                 args.putString("devNm", data.get("devNm"));
                 args.putString("devUuid", data.get("devUuid"));
                 args.putString("osCd", data.get("osCd"));
                 changeFragment(args);
-            } else {
+            }else if(data.get("osCd").equals("B")) {
+                setToolbarTitle(data.get("devNm"));
                 changeBizFragment();
+            }else{//로그아웃
+                AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                dialog.setTitle("로그아웃 하시겠습니까?");
+                dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        SettingViewActivity.logout(context);
+                    }
+                });
+                // Cancel 버튼 이벤트
+                dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
             }
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
@@ -452,9 +476,13 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
             } else if(mData.get("osCd").equals("G")) { // GiGA NAS
                 holder.mIcon.setImageResource(R.drawable.ico_24dp_device_giganas);
                 holder.mText.setTextColor(getResources().getColor(R.color.windowBackground));
-            } else { // bizNote
+            } else if(mData.get("osCd").equals("B")){ // bizNote
                 holder.mIcon.setImageResource(R.drawable.ico_24dp_device_giganas);
                 holder.mText.setTextColor(getResources().getColor(R.color.windowBackground));
+            } else{
+                holder.mIcon.setImageResource(R.drawable.ico_24dp_device_pc_off);
+                holder.mText.setTextColor(getResources().getColor(R.color.disabledGrayToNavi));
+                holder.mStatusIcon.setVisibility(View.GONE);
             }
 
             holder.mText.setTypeface(Typeface.DEFAULT_BOLD);

@@ -38,7 +38,7 @@ public class SettingViewActivity extends Activity {
     private TextView loginId;
     private static Context context;
     private static SettingViewActivity activity;
-    private ProgressDialog mProgDlg;
+    private static ProgressDialog mProgDlg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +47,6 @@ public class SettingViewActivity extends Activity {
 
         context = SettingViewActivity.this;
         activity = SettingViewActivity.this;
-        mProgDlg = ProgressService.progress(context);
 
         findViewById(R.id.logout).setOnClickListener(logout);
         findViewById(R.id.topBack).setOnClickListener(closeActivity);
@@ -92,7 +91,7 @@ public class SettingViewActivity extends Activity {
             dialog.setTitle("로그아웃 하시겠습니까?");
             dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
-                    logout();
+                    logout(context);
                 }
             });
             // Cancel 버튼 이벤트
@@ -105,8 +104,8 @@ public class SettingViewActivity extends Activity {
         }
     };
 
-    public void logout() {
-
+    public static void logout(final Context mContext) {
+        mProgDlg = ProgressService.progress(mContext);
         mProgDlg.setMessage("로그아웃 중입니다.");
         mProgDlg.onStart();
 
@@ -117,21 +116,25 @@ public class SettingViewActivity extends Activity {
                 Gson gson = new Gson();
                 int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
                 String message = new ResponseFailCode().responseFail(statusCode);
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 mProgDlg.dismiss();
                 if(statusCode == 100){
-                    SharedPreferenceUtil.putSharedPreference(getApplicationContext(), getString(R.string.xAuthToken), "");
-                    SharedPreferenceUtil.putSharedPreference(getApplicationContext(), getString(R.string.cookie), "");
-                    SharedPreferenceUtil.putSharedPreference(getApplicationContext(), getString(R.string.userId), "");
-                    SharedPreferenceUtil.putSharedPreference(getApplicationContext(), getString(R.string.password), "");
-                    SharedPreferenceUtil.putSharedPreference(getApplicationContext(), getString(R.string.isChecked), false);
+                    SharedPreferenceUtil.putSharedPreference(mContext, mContext.getString(R.string.xAuthToken), "");
+                    SharedPreferenceUtil.putSharedPreference(mContext, mContext.getString(R.string.cookie), "");
+                    SharedPreferenceUtil.putSharedPreference(mContext, mContext.getString(R.string.userId), "");
+                    SharedPreferenceUtil.putSharedPreference(mContext, mContext.getString(R.string.password), "");
+                    SharedPreferenceUtil.putSharedPreference(mContext, mContext.getString(R.string.isChecked), false);
                     DrawerLayoutViewActivity.activity.finish();
-                    Intent intent = new Intent(activity, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    activity.startActivity(intent);
-                    activity.finish();
-
+                    if(mContext == SettingViewActivity.context){
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        activity.startActivity(intent);
+                        activity.finish();
+                    }else{
+                        Intent intent = new Intent(mContext, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        mContext.startActivity(intent);
+                    }
 
                 }else if(statusCode == 400) {
                     alert.setMessage(message);
@@ -140,10 +143,17 @@ public class SettingViewActivity extends Activity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();     //닫기
-                            Intent intent = new Intent(context, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            activity.finish();
+                            DrawerLayoutViewActivity.activity.finish();
+                            if(mContext == SettingViewActivity.context){
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                activity.startActivity(intent);
+                                activity.finish();
+                            }else{
+                                Intent intent = new Intent(mContext, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                mContext.startActivity(intent);
+                            }
                         }
                     });
                 }else if(statusCode != 100 && statusCode != 400){
@@ -161,17 +171,24 @@ public class SettingViewActivity extends Activity {
             @Override
             public void onFailure(Throwable t) {
                 mProgDlg.dismiss();
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                 alert.setMessage(context.getString(R.string.serverOut));
                 alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();     //닫기
-                        Intent intent = new Intent(context, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
                         DrawerLayoutViewActivity.activity.finish();
-                        activity.finish();
+                        if(mContext == SettingViewActivity.context){
+                            Intent intent = new Intent(context, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            activity.startActivity(intent);
+                            activity.finish();
+                        }else{
+                            Intent intent = new Intent(mContext, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            mContext.startActivity(intent);
+                        }
+
                     }
                 });
             }
