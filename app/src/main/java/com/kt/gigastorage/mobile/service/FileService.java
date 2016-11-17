@@ -432,7 +432,7 @@ public class FileService {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();     //닫기
-                                SendNasViewActivity.offLine();
+                                DrawerLayoutViewActivity.refresh();
                             }
                         });
                         alert.setMessage("원격지 PC가 오프라인 상태입니다.");
