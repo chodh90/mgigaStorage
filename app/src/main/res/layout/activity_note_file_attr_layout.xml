@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backGray"
+    android:background="@color/baseColor"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
@@ -28,14 +28,19 @@
                 android:layout_height="fill_parent"
                 android:textSize="18sp"
                 android:layout_marginLeft="5dp"
-                android:text="파일 속성"
-                android:textColor="#ffffff"
+                android:text="BizNote"
+                android:textColor="@color/darkGray"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
                 android:layout_weight="1"/>
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/toolbar_shadow"/>
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -51,36 +56,260 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="220dp"
                 android:orientation="vertical"
-                android:layout_marginBottom="2dp"
-                android:background="#fff">
+                android:background="@color/baseColor">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:id="@+id/fileNm"
+                    android:text=""
+                    android:textColor="@color/darkGray"
+                    android:textStyle="bold"/>
                 <ImageView
-                    android:src="@drawable/main"
-                    android:id="@+id/fileThum"
-                    android:layout_gravity = "center"
                     android:layout_width="200dp"
-                    android:layout_height="200dp"/>
+                    android:layout_height="200dp"
+                    android:src="@drawable/default_img"
+                    android:id="@+id/fileThum"
+                    android:layout_gravity = "center"/>
             </LinearLayout>
-
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EDEDED"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#fff"
-                android:layout_marginBottom="2dp"
-                android:paddingLeft="25dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp">
-                <TextView
+                android:background="@color/baseColor">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/fileNm"
-                    android:text="GIGA Storage 차별화 방안.doc"
-                    android:textColor="@color/darkGray"
-                    android:textStyle="bold"/>
+                    android:orientation="horizontal"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="5dp"
+                    android:id="@+id/relationBiznote">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/ico_24dp_biznote"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="관련 BizNote"
+                        android:textColor="#4F4F4F"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/ico_24dp_email_open"
+                        android:id="@+id/relationBtn"/>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#1C1C1C"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="-25dp"
+                    android:id="@+id/relationImg"
+                    android:visibility="gone">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_weight="0.5"
+                        android:id="@+id/ascNote1"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ascNoteTxt1"
+                            android:text="GIGA Storage"
+                            android:textColor="@color/darkGray"/>
+                        <ImageView
+                            android:src="@drawable/default_img"
+                            android:id="@+id/ascNoteImg1"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_weight="0.5"
+                        android:id="@+id/ascNote2"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ascNoteTxt2"
+                            android:text="GIGA Storage"
+                            android:textColor="@color/darkGray"/>
+                        <ImageView
+                            android:src="@drawable/default_img"
+                            android:id="@+id/ascNoteImg2"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"/>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/baseColor"
+                android:id="@+id/email">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/ico_24dp_email"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="Email"
+                        android:textColor="#4F4F4F"
+                        android:layout_weight="1"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/ico_24dp_email_open"
+                        android:id="@+id/emailBtn"/>
+                </LinearLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#1C1C1C" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginLeft="35dp"
+                            android:src="@drawable/ico_18dp_biznote_more"
+                            android:id="@+id/firstRelationImg"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:id="@+id/firstEmail">
+                            <TextView
+                                android:layout_width="250dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginLeft="15dp"
+                                android:text="개발팀 스터디 일정문의"
+                                android:textColor="#4F4F4F"
+                                android:id="@+id/emailTitle"/>
+                            <TextView
+                                android:layout_width="250dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginLeft="15dp"
+                                android:text="2016.09.20 08:30"
+                                android:textColor="#7F7F7F"
+                                android:textSize="12sp"
+                                android:id="@+id/emailDate"/>
+                            <TextView
+                                android:layout_width="250dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:layout_marginLeft="15dp"
+                                android:layout_marginBottom="30dp"
+                                android:text="보낸사람: G.Park@kt.com"
+                                android:textColor="#7F7F7F"
+                                android:textSize="12sp"
+                                android:id="@+id/emailNm"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:id="@+id/emailInfo">
 
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginLeft="25dp"
+                        android:src="@drawable/ico_24dp_info"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="10dp"
+                        android:text="Info"
+                        android:textColor="@color/darkGray"
+                        android:layout_weight="1"/>
+                    <Button
+                        android:textAllCaps="false"
+                        android:layout_width="70dp"
+                        android:layout_height="20dp"
+                        android:layout_marginRight="11dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="@drawable/attr_button_style"
+                        android:textColor="@color/baseColor"
+                        android:text="파일 더 보기"
+                        android:textSize="12sp"
+                        android:id="@+id/btnSameTimeFile"/>
+                    </LinearLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="#1C1C1C"/>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -88,231 +317,67 @@
                 android:background="#fff"
                 android:layout_marginBottom="2dp"
                 android:paddingTop="5dp">
-
                 <TableLayout
-                    android:layout_height="match_parent"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
-                    android:layout_marginBottom="12dp">
+                    android:layout_height="match_parent">
                     <TableRow
-                        android:layout_marginLeft="25dp"
+                        android:layout_marginLeft="70dp"
                         android:layout_marginBottom="6dp">
                         <TextView
                             android:text="크기"
-                            android:textStyle="bold"
                             android:textColor="@color/darkGray"/>
                         <TextView
-                            android:id="@+id/fileSize"
-                            android:text="566KB"
+                            android:layout_marginLeft="40dp"
+                            android:text=""
                             android:textColor="@color/darkGray"
-                            android:layout_marginLeft="40dp" />
+                            android:id="@+id/fileSize" />
                     </TableRow>
-                    <!--<TableRow
-                        android:layout_marginLeft="25dp"
-                        android:layout_marginBottom="6dp">
-                        <TextView
-                            android:text="생성자"
-                            android:textStyle="bold"
-                            android:textColor="@color/darkGray"/>
-                        <TextView
-                            android:id="@+id/fileCreator"
-                            android:text="김영은"
-                            android:textColor="@color/darkGray"
-                            android:layout_marginLeft="40dp" />
-                    </TableRow>-->
                     <TableRow
-                        android:layout_marginLeft="25dp"
+                        android:layout_marginLeft="70dp"
                         android:layout_marginBottom="6dp">
                         <TextView
                             android:text="위치"
-                            android:textStyle="bold"
-                            android:textColor="@color/darkGray"/>
+                            android:textColor="@color/darkGray" />
                         <TextView
-                            android:id="@+id/foldrWholePath"
-                            android:text="GIGA NAS > 문서"
-                            android:textColor="@color/darkGray"
-                            android:layout_width="200dp"
+                            android:layout_width="180dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="40dp"/>
+                            android:layout_marginLeft="40dp"
+                            android:text=""
+                            android:textColor="@color/darkGray"
+                            android:id="@+id/foldrWholePathNm"/>
+
                     </TableRow>
                     <TableRow
-                        android:layout_marginBottom="6dp"
-                        android:layout_marginLeft="25dp">
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginBottom="6dp">
                         <TextView
                             android:text="생성일"
-                            android:textStyle="bold"
                             android:textColor="@color/darkGray"/>
                         <TextView
-                            android:id="@+id/cretDate"
-                            android:text="2016-08-25"
+                            android:layout_marginLeft="40dp"
+                            android:text=""
                             android:textColor="@color/darkGray"
-                            android:layout_marginLeft="40dp" />
+                            android:id="@+id/cretDate"/>
                     </TableRow>
                     <TableRow
-                        android:layout_marginBottom="6dp"
-                        android:layout_marginLeft="25dp">
+                        android:layout_marginLeft="70dp"
+                        android:layout_marginBottom="6dp">
                         <TextView
-                            android:text="최종수정일"
-                            android:textStyle="bold"
+                            android:text="최종 수정일"
                             android:textColor="@color/darkGray"/>
                         <TextView
-                            android:id="@+id/amdDate"
-                            android:text="2016-08-25"
+                            android:layout_marginLeft="40dp"
+                            android:text=""
                             android:textColor="@color/darkGray"
-                            android:layout_marginLeft="40dp" />
+                            android:id="@+id/amdDate"/>
                     </TableRow>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:background="@color/baseColor">
+                    </LinearLayout>
                 </TableLayout>
-
-                <Button
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/btnSameTimeFile"
-                    android:text="같은 시기 사용된\n파일 더 보기"
-                    android:textColor="@color/darkGray"
-                    android:textSize="12sp"
-                    android:background="@drawable/search_border_style"
-                    android:layout_margin="5dp"
-                    android:layout_gravity="right"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:orientation="vertical"
-                android:background="#ffffff">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="25dp"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold"
-                    android:text="Email"
-                    android:textColor="@color/darkGray"/>
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:src="@drawable/ico_24dp_info_mail"
-                        android:id="@+id/emailView"
-                        android:layout_marginLeft="33dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/emailTitle"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="7.1dp"
-                        android:text=""
-                        android:textColor="@color/darkGray"/>
-                </LinearLayout>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="68dp"
-                    android:id="@+id/emailDate"
-                    android:text=""
-                    android:textColor="@color/darkGray"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/emailNm"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginLeft="68dp"
-                    android:text=""
-                    android:textColor="@color/darkGray"/>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:background="#ffffff"
-                android:layout_marginBottom="2dp"
-                android:gravity="right">
-                <Button
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/btnSendFile"
-                    android:text="이 사람이 보낸\n파일 더보기"
-                    android:textSize="12sp"
-                    android:textColor="@color/darkGray"
-                    android:background="@drawable/search_border_style"
-                    android:layout_margin="5dp"
-                    android:layout_marginRight="10dp"/>
-                <Button
-                    android:layout_width="120dp"
-                    android:layout_height="40dp"
-                    android:id="@+id/btnTogetherPerson"
-                    android:text="함께 받은\n사람 보기"
-                    android:textSize="12sp"
-                    android:textColor="@color/darkGray"
-                    android:background="@drawable/search_border_style"
-                    android:layout_margin="5dp"
-                    />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingLeft="25dp"
-                android:background="#fff">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textStyle="bold"
-                    android:text="관련 BizNote"
-                    android:textColor="@color/darkGray"
-                    android:layout_marginBottom="10dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginLeft="-25dp">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:id="@+id/ascNote1"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:visibility="gone">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ascNoteTxt1"
-                            android:text="[GIGA Storage 기획]"
-                            android:textColor="@color/darkGray"/>
-                        <ImageView
-                            android:src="@drawable/main"
-                            android:id="@+id/ascNoteImg1"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
-                        android:id="@+id/ascNote2"
-                        android:orientation="vertical"
-                        android:gravity="center_horizontal"
-                        android:visibility="gone">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/ascNoteTxt2"
-                            android:text="[GIGA Storage 기획]"
-                            android:textColor="@color/darkGray"/>
-                        <ImageView
-                            android:src="@drawable/main"
-                            android:id="@+id/ascNoteImg2"
-                            android:layout_width="150dp"
-                            android:layout_height="150dp"/>
-                    </LinearLayout>
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

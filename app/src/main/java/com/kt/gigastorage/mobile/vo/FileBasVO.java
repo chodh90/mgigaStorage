@@ -3,7 +3,6 @@ package com.kt.gigastorage.mobile.vo;
 import android.content.Context;
 
 import com.kt.gigastorage.mobile.activity.MainActivity;
-import com.kt.gigastorage.mobile.utils.DeviceUtil;
 
 import java.util.List;
 

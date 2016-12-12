@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -27,7 +25,6 @@ import com.kt.gigastorage.mobile.activity.FileSearchViewActivity;
 import com.kt.gigastorage.mobile.activity.MainActivity;
 import com.kt.gigastorage.mobile.activity.R;
 import com.kt.gigastorage.mobile.activity.SendNasViewActivity;
-import com.kt.gigastorage.mobile.service.AlertDialogService;
 import com.kt.gigastorage.mobile.service.FileService;
 import com.kt.gigastorage.mobile.service.FileUploadThread;
 import com.kt.gigastorage.mobile.service.ResponseFailCode;
@@ -131,7 +128,7 @@ public class FoldrFragment extends Fragment {
                     comndQueueVO.setToFileNm(fileNm);
                     comndQueueVO.setUserId(userId);
 
-                    FileService.fileDownloadWebservice(comndQueueVO,flagContext);
+                    FileService.fileDownloadWebservice(comndQueueVO,flagContext,"N");
                 }
                 if(osCd.equals("A") && !devUuid.equals(myDevUuid)){
 
@@ -151,7 +148,7 @@ public class FoldrFragment extends Fragment {
                     comndQueueVO.setToFileNm(fileNm);
                     comndQueueVO.setUserId(userId);
 
-                    FileService.fileDownloadWebservice(comndQueueVO,flagContext);
+                    FileService.fileDownloadWebservice(comndQueueVO,flagContext,"N");
 
                 }if(osCd.equals("G")){
                     FileBasVO fileBasVO = new FileBasVO();
@@ -351,14 +348,14 @@ public class FoldrFragment extends Fragment {
                     holder.mCheck.setVisibility(View.GONE);
                 } else {
                     holder.mCheck.setVisibility(View.VISIBLE);
-                    holder.mCheck.setImageResource(R.drawable.ico_36dp_done_disable);
+                    holder.mCheck.setImageResource(R.drawable.ico_24dp_done_disable);
                     holder.mText.setTextColor(getResources().getColor(R.color.darkGray));
                     holder.mIcon.setImageResource(R.drawable.ico_36dp_folder);
                 }
             } else {
                 holder.mCheck.setVisibility(View.VISIBLE);
-                holder.mCheck.setImageResource(R.drawable.ico_36dp_done);
-                holder.mText.setTextColor(getResources().getColor(R.color.baseColor));
+                holder.mCheck.setImageResource(R.drawable.ico_24dp_done_r);
+                holder.mText.setTextColor(getResources().getColor(R.color.darkGray));
                 holder.mIcon.setImageResource(R.drawable.ico_36dp_folder_r);
             }
 

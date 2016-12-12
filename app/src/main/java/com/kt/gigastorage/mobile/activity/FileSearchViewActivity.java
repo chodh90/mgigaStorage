@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -36,6 +35,7 @@ import com.kt.gigastorage.mobile.service.FileService;
 import com.kt.gigastorage.mobile.service.FileViewService;
 import com.kt.gigastorage.mobile.service.ProgressService;
 import com.kt.gigastorage.mobile.service.ResponseFailCode;
+import com.kt.gigastorage.mobile.service.TimerService;
 import com.kt.gigastorage.mobile.utils.DeviceUtil;
 import com.kt.gigastorage.mobile.utils.FileUtil;
 import com.kt.gigastorage.mobile.utils.SharedPreferenceUtil;
@@ -84,6 +84,7 @@ public class FileSearchViewActivity extends Activity {
     public static Context context; // DrawerLayoutViewActivity
     public static Context mContext; // FileSearchViewActivity
     public static FileSearchViewActivity activity;
+    private Map<String, String> itemArea;
     private boolean[] swipeStateList;
 
     @Override
@@ -136,8 +137,7 @@ public class FileSearchViewActivity extends Activity {
         mAdapter = new AppAdapter();
         mListView.setAdapter(mAdapter); // swipeMenuListView에 어댑터 연결
 
-        totalLine.setVisibility(View.GONE);
-        searchKeyword.setOnTouchListener(search);
+        findViewById(R.id.searchBtn).setOnClickListener(searchClick);
 
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 
@@ -158,7 +158,7 @@ public class FileSearchViewActivity extends Activity {
                     case 1: //접속 기기
 
                         detailItem = new SwipeMenuItem(mContext);
-                        detailItem.setBackground(R.color.backGray);
+                        detailItem.setBackground(R.color.baseColor);
                         detailItem.setWidth(dp2px(80));
                         detailItem.setIcon(R.drawable.ico_18dp_contextmenu_info);
                         detailItem.setTitle("속성보기");
@@ -166,7 +166,7 @@ public class FileSearchViewActivity extends Activity {
                         detailItem.setTitleColor(R.color.darkGray);
 
                         appPlayItem = new SwipeMenuItem(mContext);
-                        appPlayItem.setBackground(R.color.backGray);
+                        appPlayItem.setBackground(R.color.baseColor);
                         appPlayItem.setWidth(dp2px(80));
                         appPlayItem.setIcon(R.drawable.ico_18dp_contextmenu_app);
                         appPlayItem.setTitle("앱 실행");
@@ -174,7 +174,7 @@ public class FileSearchViewActivity extends Activity {
                         appPlayItem.setTitleColor(R.color.darkGray);
 
                         gigaNasItem = new SwipeMenuItem(mContext);
-                        gigaNasItem.setBackground(R.color.backGray);
+                        gigaNasItem.setBackground(R.color.baseColor);
                         gigaNasItem.setWidth(dp2px(80));
                         gigaNasItem.setIcon(R.drawable.ico_18dp_contextmenu_send);
                         gigaNasItem.setTitle("GiGA NAS로\n 보내기");
@@ -182,7 +182,7 @@ public class FileSearchViewActivity extends Activity {
                         gigaNasItem.setTitleColor(R.color.darkGray);
 
                         deleteItem = new SwipeMenuItem(mContext);
-                        deleteItem.setBackground(R.color.backGray);
+                        deleteItem.setBackground(R.color.baseColor);
                         deleteItem.setWidth(dp2px(80));
                         deleteItem.setIcon(R.drawable.ico_18dp_contextmenu_del);
                         deleteItem.setTitle("삭제");
@@ -198,7 +198,7 @@ public class FileSearchViewActivity extends Activity {
                     case 2: //접속기기 외 PC,모바일
 
                         detailItem = new SwipeMenuItem(mContext);
-                        detailItem.setBackground(R.color.backGray);
+                        detailItem.setBackground(R.color.baseColor);
                         detailItem.setWidth(dp2px(80));
                         detailItem.setIcon(R.drawable.ico_18dp_contextmenu_info);
                         detailItem.setTitle("속성보기");
@@ -206,7 +206,7 @@ public class FileSearchViewActivity extends Activity {
                         detailItem.setTitleColor(R.color.darkGray);
 
                         downloadItem = new SwipeMenuItem(mContext);
-                        downloadItem.setBackground(R.color.backGray);
+                        downloadItem.setBackground(R.color.baseColor);
                         downloadItem.setWidth(dp2px(80));
                         downloadItem.setIcon(R.drawable.ico_18dp_contextmenu_dwld);
                         downloadItem.setTitle("다운로드");
@@ -214,7 +214,7 @@ public class FileSearchViewActivity extends Activity {
                         downloadItem.setTitleColor(R.color.darkGray);
 
                         gigaNasItem = new SwipeMenuItem(mContext);
-                        gigaNasItem.setBackground(R.color.backGray);
+                        gigaNasItem.setBackground(R.color.baseColor);
                         gigaNasItem.setWidth(dp2px(80));
                         gigaNasItem.setIcon(R.drawable.ico_18dp_contextmenu_send);
                         gigaNasItem.setTitle("GiGA NAS로\n 보내기");
@@ -222,7 +222,7 @@ public class FileSearchViewActivity extends Activity {
                         gigaNasItem.setTitleColor(R.color.darkGray);
 
                         blankItem = new SwipeMenuItem(mContext);
-                        blankItem.setBackground(R.color.backGray);
+                        blankItem.setBackground(R.color.baseColor);
                         blankItem.setWidth(dp2px(75));
 
                         menu.addMenuItem(detailItem);
@@ -235,7 +235,7 @@ public class FileSearchViewActivity extends Activity {
                     case 3: //NAS
 
                         detailItem = new SwipeMenuItem(mContext);
-                        detailItem.setBackground(R.color.backGray);
+                        detailItem.setBackground(R.color.baseColor);
                         detailItem.setWidth(dp2px(80));
                         detailItem.setIcon(R.drawable.ico_18dp_contextmenu_info);
                         detailItem.setTitle("속성보기");
@@ -243,7 +243,7 @@ public class FileSearchViewActivity extends Activity {
                         detailItem.setTitleColor(R.color.darkGray);
 
                         downloadItem = new SwipeMenuItem(mContext);
-                        downloadItem.setBackground(R.color.backGray);
+                        downloadItem.setBackground(R.color.baseColor);
                         downloadItem.setWidth(dp2px(80));
                         downloadItem.setIcon(R.drawable.ico_18dp_contextmenu_dwld);
                         downloadItem.setTitle("다운로드");
@@ -251,7 +251,7 @@ public class FileSearchViewActivity extends Activity {
                         downloadItem.setTitleColor(R.color.darkGray);
 
                         gigaNasItem = new SwipeMenuItem(mContext);
-                        gigaNasItem.setBackground(R.color.backGray);
+                        gigaNasItem.setBackground(R.color.baseColor);
                         gigaNasItem.setWidth(dp2px(80));
                         gigaNasItem.setIcon(R.drawable.ico_18dp_contextmenu_send);
                         gigaNasItem.setTitle("GiGA NAS로\n 보내기");
@@ -259,7 +259,7 @@ public class FileSearchViewActivity extends Activity {
                         gigaNasItem.setTitleColor(R.color.darkGray);
 
                         deleteItem = new SwipeMenuItem(mContext);
-                        deleteItem.setBackground(R.color.backGray);
+                        deleteItem.setBackground(R.color.baseColor);
                         deleteItem.setWidth(dp2px(75));
                         deleteItem.setIcon(R.drawable.ico_18dp_contextmenu_del);
                         deleteItem.setTitle("삭제");
@@ -274,14 +274,14 @@ public class FileSearchViewActivity extends Activity {
                         break;
                     case 4:
                         detailItem = new SwipeMenuItem(mContext);
-                        detailItem.setBackground(R.color.backGray);
+                        detailItem.setBackground(R.color.baseColor);
                         detailItem.setWidth(dp2px(80));
                         detailItem.setIcon(R.drawable.ico_18dp_contextmenu_info);
                         detailItem.setTitle("속성보기");
                         detailItem.setTitleSize(12);
                         detailItem.setTitleColor(R.color.darkGray);
 
-                        blankItem.setBackground(R.color.backGray);
+                        blankItem.setBackground(R.color.baseColor);
                         blankItem.setWidth(dp2px(235));
 
                         menu.addMenuItem(detailItem);
@@ -294,164 +294,166 @@ public class FileSearchViewActivity extends Activity {
         mListView.setMenuCreator(creator);
 
         mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-             @Override
-             public boolean onMenuItemClick(int position, SwipeMenu menu, final int index) {
-                 mIndex = position;
-                 item = mListData.get(position);
-                 devUuid = item.get("devUuid");
-                 String command = "search";
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, final int index) {
+                mIndex = position;
+                item = mListData.get(position);
+                devUuid = item.get("devUuid");
+                String command = "search";
 
-                 View view = mAdapter.getViewByPosition(position,mListView);
-                 ((ImageView)view.findViewById(contextIcon)).setImageResource(R.drawable.ico_36dp_context_open);
+                View view = mAdapter.getViewByPosition(position,mListView);
+                ((ImageView)view.findViewById(contextIcon)).setImageResource(R.drawable.ico_36dp_context_open);
+                if(index != -1){
+                    switch (menu.getViewType()) {
 
-                 switch (menu.getViewType()) {
+                        case 0: // 폴더
+                            break;
+                        case 1: // 접속기기 파일
+                            switch (index) {
+                                case 0: // 파일속성
+                                    intentFileAttrViewActivity(item);
+                                    break;
+                                case 1: // 앱 실행
+                                    FileViewService.viewFile(mContext,item.get("foldrWholePathNm"),item.get("fileNm"));
+                                    break;
+                                case 2: //GIGA NAS로 내보내기
+                                    ((DrawerLayoutViewActivity)context).intentToActivity(item,item.get("osCd"),devUuid,command);
+                                    break;
+                                case 3: //파일 삭제
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                                    dialog.setTitle("해당 파일을 삭제 하시겠습니까?");
+                                    dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mProgDlg.setMessage("파일 삭제중입니다...");
+                                            mProgDlg.show();
+                                            FileUtil.removeFile(item.get("foldrWholePathNm"),item.get("fileNm"));
+                                            FileService.syncFoldrInfo();
+                                            mProgDlg.dismiss();
+                                            alert.setMessage("파일 삭제가 완료 되었습니다.");
+                                            alert.show();
+                                            getFoldrFileList();
+                                        }
+                                    });
+                                    // Cancel 버튼 이벤트
+                                    dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                                    dialog.show();
+                                    break;
+                            }
+                            break;
+                        case 2: // 접속기기 외 PC 파일
+                            switch (index) {
+                                case 0: // 파일속성
+                                    intentFileAttrViewActivity(item);
+                                    break;
+                                case 1: // 다운로드
+                                    if (item.get("nasSynchYn").equals("Y")) {
+                                        new FileDownloadThread(mContext).execute(item.get("foldrWholePathNm"), item.get("fileNm"), item.get("devUuid"),"N"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                                        break;
+                                    } else {
+                                        ComndQueueVO comndQueueVO = new ComndQueueVO();
+                                        if (item.get("osCd").equals("A")) { // osCd = W, A 분기 처리
+                                            comndQueueVO.setComnd("RALA");
+                                            comndQueueVO.setFromOsCd("A");
+                                        }
+                                        if (item.get("osCd").equals("W")) {
+                                            comndQueueVO.setComnd("RWLA");
+                                            comndQueueVO.setFromOsCd("W");
+                                        }
+                                        comndQueueVO.setFromUserId(userId);
+                                        comndQueueVO.setFromFoldr(item.get("foldrWholePathNm"));
+                                        comndQueueVO.setFromFileNm(item.get("fileNm"));
+                                        Object objFileId = item.get("fileId");
+                                        comndQueueVO.setFromFileId(objFileId.toString());
+                                        comndQueueVO.setFromDevUuid(devUuid);
+                                        comndQueueVO.setToFoldr("/Mobile");
+                                        comndQueueVO.setToOsCd("A");
+                                        comndQueueVO.setToDevUuid(myDevUuid);
+                                        comndQueueVO.setComndOsCd("A");
+                                        comndQueueVO.setComndDevUuid(myDevUuid);
 
-                     case 0: // 폴더
-                         break;
-                     case 1: // 접속기기 파일
-                         switch (index) {
-                             case 0: // 파일속성
-                                 intentFileAttrViewActivity(item);
-                                 break;
-                             case 1: // 앱 실행
-                                 FileViewService.viewFile(mContext,item.get("foldrWholePathNm"),item.get("fileNm"));
-                                 break;
-                             case 2: //GIGA NAS로 내보내기
-                                 ((DrawerLayoutViewActivity)context).intentToActivity(item,item.get("osCd"),devUuid,command);
-                                 break;
-                             case 3: //파일 삭제
-                                 AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                                 dialog.setTitle("해당 파일을 삭제 하시겠습니까?");
-                                 dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                     public void onClick(DialogInterface dialog, int which) {
-                                         mProgDlg.setMessage("파일 삭제중입니다...");
-                                         mProgDlg.show();
-                                         FileUtil.removeFile(item.get("foldrWholePathNm"),item.get("fileNm"));
-                                         FileService.syncFoldrInfo();
-                                         mProgDlg.dismiss();
-                                         alert.setMessage("파일 삭제가 완료 되었습니다.");
-                                         alert.show();
-                                         getFoldrFileList();
-                                     }
-                                 });
-                                 // Cancel 버튼 이벤트
-                                 dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
-                                     public void onClick(DialogInterface dialog, int which) {
-                                         dialog.cancel();
-                                     }
-                                 });
-                                 dialog.show();
-                                 break;
-                         }
-                         break;
-                     case 2: // 접속기기 외 PC 파일
-                         switch (index) {
-                             case 0: // 파일속성
-                                 intentFileAttrViewActivity(item);
-                                 break;
-                             case 1: // 다운로드
-                                 if (item.get("nasSynchYn").equals("Y")) {
-                                     new FileDownloadThread(mContext).execute(item.get("foldrWholePathNm"), item.get("fileNm"), item.get("devUuid"));
-                                     break;
-                                 } else {
-                                     ComndQueueVO comndQueueVO = new ComndQueueVO();
-                                     if (item.get("osCd").equals("A")) { // osCd = W, A 분기 처리
-                                         comndQueueVO.setComnd("RALA");
-                                         comndQueueVO.setFromOsCd("A");
-                                     }
-                                     if (item.get("osCd").equals("W")) {
-                                         comndQueueVO.setComnd("RWLA");
-                                         comndQueueVO.setFromOsCd("W");
-                                     }
-                                     comndQueueVO.setFromUserId(userId);
-                                     comndQueueVO.setFromFoldr(item.get("foldrWholePathNm"));
-                                     comndQueueVO.setFromFileNm(item.get("fileNm"));
-                                     Object objFileId = item.get("fileId");
-                                     comndQueueVO.setFromFileId(objFileId.toString());
-                                     comndQueueVO.setFromDevUuid(devUuid);
-                                     comndQueueVO.setToFoldr("/Mobile");
-                                     comndQueueVO.setToOsCd("A");
-                                     comndQueueVO.setToDevUuid(myDevUuid);
-                                     comndQueueVO.setComndOsCd("A");
-                                     comndQueueVO.setComndDevUuid(myDevUuid);
+                                        FileService.fileDownloadWebservice(comndQueueVO,mContext,"N");
+                                        break;
+                                    }
+                                case 2: // GigaNas로 내보내기
+                                    ((DrawerLayoutViewActivity)context).intentToActivity(item, item.get("osCd"), devUuid,command);
+                                    break;
+                            }
 
-                                     FileService.fileDownloadWebservice(comndQueueVO,mContext);
-                                     break;
-                                 }
-                             case 2: // GigaNas로 내보내기
-                                     ((DrawerLayoutViewActivity)context).intentToActivity(item, item.get("osCd"), devUuid,command);
-                                     break;
-                                 }
+                            break;
+                        case 3: // NAS 파일
+                            switch (index) {
+                                case 0: // 파일속성
+                                    intentFileAttrViewActivity(item);
+                                    break;
+                                case 1: // 다운로드
+                                    new FileDownloadThread(mContext).execute(item.get("foldrWholePathNm"),item.get("fileNm"),"","N"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                                    break;
+                                case 2: //GIGA NAS로 내보내기
+                                    ((DrawerLayoutViewActivity)context).intentToActivity(item, item.get("osCd"), devUuid,command);
+                                    break;
+                                case 3:
+                                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                                    dialog.setTitle("해당 파일을 삭제 하시겠습니까?");
+                                    dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            mProgDlg.setMessage("파일 삭제중입니다...");
+                                            mProgDlg.show();
+                                            FileBasVO fileBasVO = new FileBasVO();
+                                            fileBasVO.setUserId(userId);
+                                            fileBasVO.setDevUuid(myDevUuid);
+                                            fileBasVO.setFoldrWholePathNm(item.get("foldrWholePathNm"));
+                                            fileBasVO.setFileNm(item.get("fileNm"));
+                                            Object fileIdObj = item.get("fileId");
+                                            fileBasVO.setFileId(fileIdObj.toString());
+                                            FileService.nasFileDel(fileBasVO,mContext);
+                                            FileService.syncFoldrInfo();
+                                            mProgDlg.dismiss();
+                                            getFoldrFileList();
+                                        }
+                                    });
+                                    dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                                    dialog.show();
+                                    break;
+                            }
+                            break;
+                        case 4: // 사내공유 검색
+                            intentFileAttrViewActivity(item);
+                            break;
 
-                                 break;
-                             case 3: // NAS 파일
-                                 switch (index) {
-                                     case 0: // 파일속성
-                                         intentFileAttrViewActivity(item);
-                                         break;
-                                     case 1: // 다운로드
-                                         new FileDownloadThread(mContext).execute(item.get("foldrWholePathNm"),item.get("fileNm"),"");
-                                         break;
-                                     case 2: //GIGA NAS로 내보내기
-                                         ((DrawerLayoutViewActivity)context).intentToActivity(item, item.get("osCd"), devUuid,command);
-                                         break;
-                                     case 3:
-                                         AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                                         dialog.setTitle("해당 파일을 삭제 하시겠습니까?");
-                                         dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                             public void onClick(DialogInterface dialog, int which) {
-                                                 mProgDlg.setMessage("파일 삭제중입니다...");
-                                                 mProgDlg.show();
-                                                 FileBasVO fileBasVO = new FileBasVO();
-                                                 fileBasVO.setUserId(userId);
-                                                 fileBasVO.setDevUuid(myDevUuid);
-                                                 fileBasVO.setFoldrWholePathNm(item.get("foldrWholePathNm"));
-                                                 fileBasVO.setFileNm(item.get("fileNm"));
-                                                 Object fileIdObj = item.get("fileId");
-                                                 fileBasVO.setFileId(fileIdObj.toString());
-                                                 FileService.nasFileDel(fileBasVO,mContext);
-                                                 FileService.syncFoldrInfo();
-                                                 mProgDlg.dismiss();
-                                                 getFoldrFileList();
-                                             }
-                                         });
-                                         dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
-                                             public void onClick(DialogInterface dialog, int which) {
-                                                 dialog.cancel();
-                                             }
-                                         });
-                                         dialog.show();
-                                         break;
-                                 }
-                                 break;
-                            case 4: // 사내공유 검색
-                                intentFileAttrViewActivity(item);
-                                break;
-
-
-                         }
-
-                 return false;
-             }
+                    }
+                }
+                return false;
+            }
         });
 
         //키보드 완료클릭 이벤트
         searchKeyword.setOnEditorActionListener(new EditText.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-
+                AlertDialog.Builder alert = AlertDialogService.alert(mContext);
+                String check = spaceCheck(searchKeyword.getText().toString());
                 if(searchKeyword.getText() == null || searchKeyword.getText().toString().length() < 2) {
-                    AlertDialog.Builder alert = AlertDialogService.alert(mContext);
                     alert.setMessage("2자 이상의 검색어를 입력해주세요.");
                     alert.show();
                     return false;
-                }
-
-                foldrBasVO.setSearchKeyword(searchKeyword.getText().toString());
-                if(fileShar.equals("Y")){
-                    getFileSharList();
-                }else if(fileShar.equals("N") || fileShar == null){
-                    getFoldrFileList();
+                }else if(check.equals("N")) {
+                    alert.setMessage("검색어에 공백을 제거해 주세요.");
+                    alert.show();
+                }else{
+                    foldrBasVO.setSearchKeyword(searchKeyword.getText().toString());
+                    if(fileShar.equals("Y")){
+                        getFileSharList();
+                    }else if(fileShar.equals("N") || fileShar == null){
+                        getFoldrFileList();
+                    }
                 }
                 searchKeyword.clearFocus();
 
@@ -508,41 +510,31 @@ public class FileSearchViewActivity extends Activity {
         mContext.startActivity(intent);
     }
 
-    EditText.OnTouchListener search = new View.OnTouchListener() {
+    Button.OnClickListener searchClick = new View.OnClickListener() {
         @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            final int DRAWABLE_LEFT = 0;
-            final int DRAWABLE_TOP = 1;
-            final int DRAWABLE_RIGHT = 2;
-            final int DRAWABLE_BOTTOM = 3;
-
-            if(event.getAction() == MotionEvent.ACTION_UP) {
-                if(event.getRawX() >= (searchKeyword.getRight() - searchKeyword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(searchKeyword.getWindowToken(), 0);
-
-                    if(searchKeyword.getText() == null || searchKeyword.getText().toString().length() < 2) {
-                        AlertDialog.Builder alert = AlertDialogService.alert(mContext);
-                        alert.setMessage("2자 이상의 검색어를 입력해 주세요.");
-                        alert.show();
-                        return false;
-                    }
-
-                    foldrBasVO.setSearchKeyword(searchKeyword.getText().toString());
-                    if(fileShar.equals("Y")){
-                        getFileSharList();
-                    }else if(fileShar.equals("N") || fileShar == null){
-                        getFoldrFileList();
-                    }
-                    searchKeyword.clearFocus();
-                    return true;
+        public void onClick(View v) {
+            AlertDialog.Builder alert = AlertDialogService.alert(mContext);
+            String check = spaceCheck(searchKeyword.getText().toString());
+            if(searchKeyword.getText() == null || searchKeyword.getText().toString().length() < 2) {
+                alert.setMessage("2자 이상의 검색어를 입력해주세요.");
+                alert.show();
+            }else if(check.equals("N")) {
+                alert.setMessage("검색어에 공백을 제거해 주세요.");
+                alert.show();
+            }else{
+                foldrBasVO.setSearchKeyword(searchKeyword.getText().toString());
+                if(fileShar.equals("Y")){
+                    getFileSharList();
+                }else if(fileShar.equals("N") || fileShar == null){
+                    getFoldrFileList();
                 }
             }
-            return false;
+            searchKeyword.clearFocus();
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(searchKeyword.getWindowToken(), 0);
         }
     };
+
 
     Button.OnClickListener closeActivity = new View.OnClickListener() {
         @Override
@@ -566,7 +558,6 @@ public class FileSearchViewActivity extends Activity {
                         List<Map<String, String>> tempData = new ArrayList<>();
                         tempData = gson.fromJson(response.body().get("listData"), List.class);
 
-                        totalLine.setVisibility(View.VISIBLE);
                         if(tempData != null) {
                             mListData = tempData;
                             searchTotal.setText(String.valueOf(mAdapter.getCount()));
@@ -638,7 +629,6 @@ public class FileSearchViewActivity extends Activity {
                         List<Map<String, String>> tempData = new ArrayList<>();
                         tempData = gson.fromJson(response.body().get("listData"), List.class);
 
-                        totalLine.setVisibility(View.VISIBLE);
                         if(tempData != null) {
                             mListData = tempData;
                             searchTotal.setText(String.valueOf(mAdapter.getCount()));
@@ -706,7 +696,6 @@ public class FileSearchViewActivity extends Activity {
             TextView cretDate; // 생성일자
             ImageView contextIcon; // 컨텍스트메뉴 아이콘
             TextView devNm; // 해당기기
-            ImageView dev_icon; // 해당기기 아이콘
 
             public ViewHolder(View view) {
 
@@ -716,7 +705,6 @@ public class FileSearchViewActivity extends Activity {
                 cretDate = (TextView) view.findViewById(R.id.item_date);
                 contextIcon = (ImageView) view.findViewById(R.id.contextIcon);
                 devNm = (TextView) view.findViewById(R.id.devNm);
-                dev_icon = (ImageView) view.findViewById(R.id.dev_icon);
 
                 view.setTag(this);
             }
@@ -806,7 +794,7 @@ public class FileSearchViewActivity extends Activity {
             if(mData.get("foldrYn").equals("Y")) { // 폴더
                 holder.iv_icon.setImageResource(R.drawable.ico_24dp_folder); // icon
                 holder.tv_name.setText(mData.get("foldrNm")); // name
-                holder.cretDate.setText(mData.get("cretDate")); // cret date
+                holder.devNm.setText(mData.get("devNm")); // cret date
                 holder.contextIcon.setVisibility(View.GONE);
             } else { // 파일
                 Object obj = new Object();
@@ -816,14 +804,14 @@ public class FileSearchViewActivity extends Activity {
                 holder.tv_name.setText(mData.get("fileNm")); // name
 
                 obj = (Object) mData.get("fileSize");
-                holder.cretDate.setText(mData.get("cretDate"));
+                holder.devNm.setText(mData.get("devNm"));
                 holder.contextIcon.setVisibility(View.VISIBLE);
             }
 
-            holder.devNm.setVisibility(View.VISIBLE);
-            holder.devNm.setText(mData.get("devNm"));
+            holder.cretDate.setVisibility(View.VISIBLE);
+            holder.cretDate.setText(mData.get("cretDate"));
 
-            if(mData.get("osCd") != null) {
+            /*if(mData.get("osCd") != null) {
                 if(mData.get("osCd").equals("W")) {
                     holder.dev_icon.setImageResource(R.drawable.ico_18dp_device_pc_off);
                 } else if(mData.get("osCd").equals("A")) {
@@ -831,7 +819,76 @@ public class FileSearchViewActivity extends Activity {
                 } else {
                     holder.dev_icon.setImageResource(R.drawable.ico_18dp_device_giganas_off);
                 }
-            }
+            }*/
+
+            convertView.findViewById(R.id.dir_item_area).setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    itemArea = getItem(position);
+
+                    if(itemArea.get("fileId") != null) {
+                        if(fileShar.equals("N")){
+                            /*AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+                            dialog.setTitle("해당 파일을 실행 하시겠습니까?");*/
+                            if(itemArea.get("osCd").equals("G")){
+                            /*dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {*/
+                                /*public void onClick(DialogInterface dialog, int which) {*/
+                                new FileDownloadThread(mContext).execute(itemArea.get("foldrWholePathNm"),itemArea.get("fileNm"),itemArea.get("devUuid"),"Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                            /*    }
+                            });*/
+                                // Cancel 버튼 이벤트
+                            /*dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });*/
+
+                            }else if(itemArea.get("devUuid").equals(myDevUuid)){
+                            /*dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {*/
+                                FileViewService.viewFile(mContext,itemArea.get("foldrWholePathNm"),itemArea.get("fileNm"));
+                            /*    }
+                            });*/
+                                // Cancel 버튼 이벤트
+                            /*dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });*/
+                            }else if(itemArea.get("nasSynchYn").equals("Y")){
+                                new FileDownloadThread(mContext).execute(itemArea.get("foldrWholePathNm"),itemArea.get("fileNm"),itemArea.get("devUuid"),"Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                            }else{
+                                ComndQueueVO comndQueueVO = new ComndQueueVO();
+                                if (itemArea.get("osCd").equals("A")) { // osCd = W, A 분기 처리
+                                    comndQueueVO.setComnd("RALA");
+                                    comndQueueVO.setFromOsCd("A");
+                                }
+                                if (itemArea.get("osCd").equals("W")) {
+                                    comndQueueVO.setComnd("RWLA");
+                                    comndQueueVO.setFromOsCd("W");
+                                }
+                                comndQueueVO.setFromUserId(userId);
+                                comndQueueVO.setFromFoldr(itemArea.get("foldrWholePathNm"));
+                                comndQueueVO.setFromFileNm(itemArea.get("fileNm"));
+                                Object objFileId = itemArea.get("fileId");
+                                comndQueueVO.setFromFileId(objFileId.toString());
+                                comndQueueVO.setFromDevUuid(itemArea.get("devUuid"));
+                                comndQueueVO.setToFoldr("/Mobile");
+                                comndQueueVO.setToOsCd("A");
+                                comndQueueVO.setToDevUuid(myDevUuid);
+                                comndQueueVO.setComndOsCd("A");
+                                comndQueueVO.setComndDevUuid(myDevUuid);
+
+                                FileService.fileDownloadWebservice(comndQueueVO,mContext,"Y");
+                                TimerService.timerStart(itemArea.get("fileNm"),mContext);
+                            }
+                        }
+                        /*dialog.show();*/
+                    }
+
+                    return false;
+                }
+            });
 
             convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
 
@@ -848,6 +905,27 @@ public class FileSearchViewActivity extends Activity {
     private int dp2px(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 getResources().getDisplayMetrics());
+    }
+
+    public String spaceCheck(String searchText) {
+        boolean searchCheck = false;
+
+        String check = "N";
+
+        for(int i = 0 ; i < searchText.length() ; i++) {
+            if(searchText.charAt(i) == ' '){
+                searchCheck = true;
+            }
+
+        }
+
+        if(searchCheck == false){
+            check = "Y";
+        }else{
+            return check;
+        }
+
+        return check;
     }
 
 }

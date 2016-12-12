@@ -1,12 +1,5 @@
 package com.kt.gigastorage.mobile.service;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Message;
-import android.widget.Toast;
-
-import com.kt.gigastorage.mobile.activity.MainActivity;
-
 /**
  * Created by araise on 2016-11-03.
  */

@@ -1,12 +1,10 @@
 package com.kt.gigastorage.mobile.service;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.util.Base64;
@@ -15,9 +13,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.kt.gigastorage.mobile.activity.DrawerLayoutViewActivity;
-import com.kt.gigastorage.mobile.activity.FileAttrViewActivity;
-import com.kt.gigastorage.mobile.activity.FileSearchViewActivity;
 import com.kt.gigastorage.mobile.activity.MainActivity;
 import com.kt.gigastorage.mobile.activity.R;
 import com.kt.gigastorage.mobile.activity.SendNasViewActivity;
@@ -54,7 +49,6 @@ public class FileUploadThread extends AsyncTask<String, Integer, String> {
     public static String devUuid = "";
     public static String foldrId = "";
     public static ProgressDialog mProgDlg;
-    public static Dialog alert;
 
     public FileUploadThread (Context mContext){
         context = mContext;
@@ -107,6 +101,7 @@ public class FileUploadThread extends AsyncTask<String, Integer, String> {
                             encodePath += "/" + URLEncoder.encode(foldr[i], "UTF-8");
                         }
                     }
+                    encodeFile = encodeFile.replaceAll("\\+", "%20");
                     encodePath = encodePath.replaceAll("\\+", "%20");
 
                     adress =  String.format("%s/gs-%s/%s-gs/%s/%s?overwrite=true", context.getString(R.string.nasUrl),userId, userId, encodePath, encodeFile);

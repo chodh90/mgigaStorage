@@ -30,7 +30,7 @@
                 android:textSize="18sp"
                 android:layout_marginLeft="5dp"
                 android:text="파일검색"
-                android:textColor="#ffffff"
+                android:textColor="@color/darkGray"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
                 android:layout_weight="1"/>
@@ -38,20 +38,24 @@
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
 
-    <LinearLayout
-        android:orientation="vertical"
+    <ImageView
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="4dp"
+        android:background="@drawable/toolbar_shadow"/>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:background="@color/backGray">
+        android:background="@color/baseColor">
 
         <EditText
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="fill_parent"
-            android:layout_marginLeft="25dp"
+            android:layout_marginLeft="18dp"
             android:layout_marginRight="25dp"
-            android:layout_marginTop="15dp"
             android:layout_marginBottom="5dp"
             android:padding="8dp"
             android:textSize ="15sp"
@@ -59,46 +63,34 @@
             android:hint="파일이름 또는 확장자를 입력하세요."
             android:textColorHint="@color/lightGray"
             android:textColor="@color/darkGray"
-            android:background="@drawable/search_border_style"
-            android:drawableRight="@drawable/ico_24dp_top_srch_g"
-            android:gravity="center_vertical"
-            android:layout_weight="1"
-            android:singleLine="true"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:text="사내공유"
-                android:textStyle="bold"
-                android:layout_marginBottom="15dp"
-                android:textColor="@color/darkGray"
-                android:layout_marginLeft="25dp" />
-
-            <CheckBox
-                android:theme="@style/checkBoxStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-
-                android:id="@+id/checkBox" />
-        </LinearLayout>
+            android:background="@color/baseColor"
+            android:gravity="center_vertical" />
+        <Button
+            android:textAllCaps="false"
+            android:layout_width="65dp"
+            android:layout_height="55dp"
+            android:background="@color/baseColor"
+            android:textColor="@color/darkGray"
+            android:text="검색"
+            android:textSize="15sp"
+            android:id="@+id/searchBtn"/>
     </LinearLayout>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:background="@drawable/search_border_style"
         android:id="@+id/totalLine">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
                 android:text="검색결과"
                 android:textSize ="15sp"
                 android:textColor="@color/darkGray"
@@ -107,16 +99,39 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:text="19"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:text="0"
                 android:textSize ="14sp"
-                android:textColor="@color/baseColor"
+                android:textColor="#FF0000"
                 android:id="@+id/searchTotal"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
                 android:text="건"
                 android:textSize ="15sp"
+                android:textColor="@color/darkGray"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:text="사내공유"
+                android:textStyle="bold"
+                android:layout_gravity="center"
                 android:textColor="@color/darkGray"/>
+
+            <CheckBox
+                android:theme="@style/checkBoxStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginRight="15dp"
+
+                android:id="@+id/checkBox" />
         </LinearLayout>
     </LinearLayout>
     <com.baoyz.swipemenulistview.SwipeMenuListView

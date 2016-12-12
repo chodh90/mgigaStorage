@@ -2,7 +2,6 @@ package com.kt.gigastorage.mobile.interceptor;
 
 import android.content.Context;
 
-import com.kt.gigastorage.mobile.activity.FileAttrViewActivity;
 import com.kt.gigastorage.mobile.activity.MainActivity;
 import com.kt.gigastorage.mobile.activity.R;
 import com.kt.gigastorage.mobile.utils.SharedPreferenceUtil;

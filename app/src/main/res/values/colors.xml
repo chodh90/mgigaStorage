@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#B01116</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
     <color name="colorAccent">#FF4081</color>
     <color name="windowBackground">#FFFFFF</color>
+    <color name="drawerBackground">#000000</color>
 
-    <color name="baseColor">#ED2024</color>
+    <color name="baseColor">#FFFFFF</color>
+    <color name="red">#FF0000</color>
     <color name="subColor">#B01116</color>
-    <color name="darkGray">#4C4C4E</color>
+    <color name="darkGray">#4F4F4F</color>
     <color name="lightGray">#D1D2D4</color>
     <color name="gray">#CCCCCC</color>
     <color name="backGray">#F5F5F5</color>
@@ -15,6 +17,9 @@
     <color name="pink">#F9BFBE</color>
     <color name="disabledGray">#BFBFBF</color>
     <color name="disabledGrayToNavi">#7F7F7F</color>
+    <!--<color name="">#1C1C1C</color>-->
 
-    <color name="naviHeader">#3c3c3c</color>
+    <color name="naviHeader">#3D3D3D</color>
+    <color name="mainItem">#3F3F3F</color>
+    <color name="dirAttrItem">#919191</color>
 </resources>

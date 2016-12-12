@@ -22,7 +22,6 @@ import com.kt.gigastorage.mobile.webservice.impl.RestServiceImpl;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PopupDevNmActivity extends Activity {
 
@@ -103,8 +102,8 @@ public class PopupDevNmActivity extends Activity {
                 AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 if(statusCode == 100){
                     PopupDevNmActivity.this.finish();
-                    ((DevNmSettingViewActivity)DevNmSettingViewActivity.sContext).getDevListWebservice();
-                    ((DrawerLayoutViewActivity)DrawerLayoutViewActivity.context).getDevListWebservice();
+                    ((DevNmSettingViewActivity) DevNmSettingViewActivity.sContext).getDevListWebservice();
+                    ((DrawerLayoutViewActivity) DrawerLayoutViewActivity.context).getDevListWebservice();
                 }else if(statusCode == 400){
                     alert.setMessage(message);
                     alert.show();

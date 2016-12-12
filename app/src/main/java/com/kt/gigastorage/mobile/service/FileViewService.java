@@ -38,7 +38,7 @@ public class FileViewService {
         if (fileExtend.equalsIgnoreCase("mp3")) {
             fileLinkIntent.setDataAndType(Uri.fromFile(file), "audio/*");
         } else if (fileExtend.equalsIgnoreCase("mp4")) {
-            fileLinkIntent.setDataAndType(Uri.fromFile(file), "vidio/*");
+            fileLinkIntent.setDataAndType(Uri.fromFile(file), "video/*");
         } else if (fileExtend.equalsIgnoreCase("jpg")
                 || fileExtend.equalsIgnoreCase("jpeg")
                 || fileExtend.equalsIgnoreCase("gif")

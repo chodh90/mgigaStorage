@@ -11,15 +11,6 @@ public class NoteListVO {
     /** 파일 ID **/
     private String fileId;
 
-    /** 관련노트 ID 1 **/
-    private String asc_note_id_1;
-
-    /** 관련노트 ID 2 **/
-    private String asc_note_id_2;
-
-    /** 정렬순서 **/
-    private String sort_odrg;
-
     /** 최초등록자ID **/
     private String frstRegistId;
 
@@ -61,30 +52,6 @@ public class NoteListVO {
 
     public void setFileId(String fileId) {
         this.fileId = fileId;
-    }
-
-    public String getAsc_note_id_1() {
-        return asc_note_id_1;
-    }
-
-    public void setAsc_note_id_1(String asc_note_id_1) {
-        this.asc_note_id_1 = asc_note_id_1;
-    }
-
-    public String getAsc_note_id_2() {
-        return asc_note_id_2;
-    }
-
-    public void setAsc_note_id_2(String asc_note_id_2) {
-        this.asc_note_id_2 = asc_note_id_2;
-    }
-
-    public String getSort_odrg() {
-        return sort_odrg;
-    }
-
-    public void setSort_odrg(String sort_odrg) {
-        this.sort_odrg = sort_odrg;
     }
 
     public String getFrstRegistId() {

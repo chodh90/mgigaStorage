@@ -24,7 +24,6 @@ import com.kt.gigastorage.mobile.webservice.impl.RestServiceImpl;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by araise on 2016-10-19.

@@ -4,10 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.design.widget.NavigationView;
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -46,12 +43,11 @@ public class FileService {
     public static Context context = MainActivity.context;
     public static Context mContext;
     public static String userId;
-    public static String password;
+    public static String appPlay;
 
     // FOLDR&FILE_LIST_SELECT
     public static void syncFoldrInfo() {
         userId = SharedPreferenceUtil.getSharedPreference(context,context.getString(R.string.userId));
-        password = SharedPreferenceUtil.getSharedPreference(context,context.getString(R.string.password));
 
         final FoldrBasVO foldrBasVO = new FoldrBasVO();
         foldrBasVO.setUserId(userId);
@@ -417,31 +413,34 @@ public class FileService {
     }
 
 
-    public static void fileDownloadWebservice(ComndQueueVO comndQueueVO,Context context) {
+    public static void fileDownloadWebservice(ComndQueueVO comndQueueVO, Context context, String appPlayYn) {
+        appPlay = appPlayYn;
         mContext = context;
         Call<JsonObject> reqFileDownCall = RestServiceImpl.getInstance(null).nasFileDownload(comndQueueVO);
         reqFileDownCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Response<JsonObject> response) {
                 if (response.isSuccess()) { // Code 200
-                    Gson gson = new Gson();
-                    int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
-                    if(statusCode == 501){
-                        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
-                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();     //닫기
-                                DrawerLayoutViewActivity.refresh();
-                            }
-                        });
-                        alert.setMessage("원격지 PC가 오프라인 상태입니다.");
-                        alert.show();
-                    }else{
-                        String message = new ResponseFailCode().responseFail(statusCode);
-                        AlertDialog.Builder alert = AlertDialogService.alert(mContext);
-                        alert.setMessage(message);
-                        alert.show();
+                    if(appPlay.equals("N")){
+                        Gson gson = new Gson();
+                        int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
+                        if(statusCode == 501){
+                            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                            alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();     //닫기
+                                    DrawerLayoutViewActivity.refresh();
+                                }
+                            });
+                            alert.setMessage("원격지 PC가 오프라인 상태입니다.");
+                            alert.show();
+                        }else{
+                            String message = new ResponseFailCode().responseFail(statusCode);
+                            AlertDialog.Builder alert = AlertDialogService.alert(mContext);
+                            alert.setMessage(message);
+                            alert.show();
+                        }
                     }
                 }
             }
@@ -464,7 +463,7 @@ public class FileService {
         });
     }
 
-    public static void nasFileCopy(FileBasVO fileBasVO,Context context) {
+    public static void nasFileCopy(FileBasVO fileBasVO, Context context) {
         mContext = context;
         Call<JsonObject> nasFileCopyCall = RestServiceImpl.getInstance(null).nasFileCopy(fileBasVO);
         nasFileCopyCall.enqueue(new Callback<JsonObject>() {
@@ -476,7 +475,7 @@ public class FileService {
                     String message = new ResponseFailCode().responseFail(statusCode);
                     AlertDialog.Builder alert = AlertDialogService.alert(mContext);
                     if(statusCode == 100){
-                       alert.setMessage("NAS로 내보내기 성공");
+                        alert.setMessage("NAS로 내보내기 성공");
                     }else if(statusCode != 100 && statusCode != 400){
                         alert.setMessage(message);
                         alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
@@ -508,7 +507,7 @@ public class FileService {
         });
     }
 
-    public static void nasFileDel(FileBasVO fileBasVO,Context context) {
+    public static void nasFileDel(FileBasVO fileBasVO, Context context) {
         mContext = context;
         Call<JsonObject> nasFileDelCall = RestServiceImpl.getInstance(null).nasFileDel(fileBasVO);
         nasFileDelCall.enqueue(new Callback<JsonObject>() {

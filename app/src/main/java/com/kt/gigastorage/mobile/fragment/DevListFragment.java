@@ -6,11 +6,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +48,7 @@ public class DevListFragment extends Fragment {
     private List<Map<String, String>> mListData = new ArrayList<>();
     private ListViewAdapter mAdapter = null;
     private ListView mListView = null;
+    private ImageView toolbarSort;
 
     private Context mContext;
 
@@ -70,6 +71,9 @@ public class DevListFragment extends Fragment {
         mListView.setOnItemClickListener(mItemClickListener);
 
         devBasVO.setUserId(SharedPreferenceUtil.getSharedPreference(mContext,mContext.getString(R.string.userId)));
+        Toolbar toolbar = (Toolbar) ((DrawerLayoutViewActivity) DrawerLayoutViewActivity.context).findViewById(R.id.toolbar);
+        toolbarSort = (ImageView) toolbar.findViewById(R.id.toolbar_sort);
+        toolbarSort.setVisibility(View.GONE);
 
         getDevListWebservice();
 
@@ -99,7 +103,7 @@ public class DevListFragment extends Fragment {
                         mListData.add(bizNote);
 
                         ((TextView)getActivity().findViewById(R.id.toobar_title)).setText(mListData.get(0).get("userName") + "님의 스토리지");
-                        ((TextView)((NavigationView)getActivity().findViewById(R.id.naviView)).getHeaderView(0).findViewById(R.id.nav_header_title)).setText(mListData.get(0).get("userName") + "님의 스토리지");
+                        ((TextView)((NavigationView)getActivity().findViewById(R.id.naviView)).getHeaderView(0).findViewById(R.id.nav_header_title)).setText(mListData.get(0).get("userName"));
                         mAdapter.notifyDataSetChanged();
                     }else if(statusCode == 400) {
                         alert.setMessage(message);
@@ -164,7 +168,7 @@ public class DevListFragment extends Fragment {
             } else if(data.get("osCd").equals("A")) {
                 devIcon.setImageResource(R.drawable.ico_35dp_device_mobile_on);
             } else if(data.get("osCd").equals("G")) {
-                devIcon.setImageResource(R.drawable.ico_35dp_device_giganas_select);
+                devIcon.setImageResource(R.drawable.ico_35dp_device_giganas_on);
             } else {
                 devIcon.setImageResource(R.drawable.ico_35dp_device_giganas_on);
             }
@@ -181,7 +185,8 @@ public class DevListFragment extends Fragment {
                 args.putString("osCd", data.get("osCd"));
                 ((DrawerLayoutViewActivity)getActivity()).changeFragment(args);
             } else {
-                ((DrawerLayoutViewActivity)getActivity()).changeBizFragment();
+                Bundle args = new Bundle();
+                ((DrawerLayoutViewActivity)getActivity()).changeBizFragment("bizNote",args);
             }
 
         }
@@ -190,7 +195,7 @@ public class DevListFragment extends Fragment {
     private class ViewHolder {
         public ImageView mIcon;
         public TextView mText;
-        /*public ImageView mStatusIcon;*/
+        public ImageView mStatusIcon;
         public TextView mDevUuid;
     }
 
@@ -228,7 +233,7 @@ public class DevListFragment extends Fragment {
 
                 holder.mIcon = (ImageView) convertView.findViewById(R.id.dev_icon);
                 holder.mText = (TextView) convertView.findViewById(R.id.dev_nm);
-                /*holder.mStatusIcon = (ImageView) convertView.findViewById(R.id.onOffIcon);*/
+                holder.mStatusIcon = (ImageView) convertView.findViewById(R.id.onOffIcon);
                 holder.mDevUuid = (TextView) convertView.findViewById(R.id.devUuid);
 
                 convertView.setTag(holder);
@@ -243,16 +248,21 @@ public class DevListFragment extends Fragment {
             if(mData.get("osCd").equals("W")) { // PC
                 if(mData.get("onoff").equals("Y")){
                     holder.mIcon.setImageResource(R.drawable.ico_35dp_device_pc_on);
-                    holder.mText.setTextColor(getResources().getColor(R.color.darkGray));
                 }else{
                     holder.mIcon.setImageResource(R.drawable.ico_35dp_device_pc_off);
-                    holder.mText.setTextColor(getResources().getColor(R.color.disabledGray));
                 }
+                holder.mText.setTextColor(getResources().getColor(R.color.darkGray));
             } else if(mData.get("osCd").equals("A")) { // Android
 
-                //TODO - 안드로이드폰은 우선 다 ON으로 되어있는 것으로
+                //안드로이드폰은 다 ON
                 holder.mIcon.setImageResource(R.drawable.ico_35dp_device_mobile_on);
                 holder.mText.setTextColor(getResources().getColor(R.color.darkGray));
+
+                if(mData.get("devUuid").equals(SharedPreferenceUtil.getSharedPreference(mContext, "devUuid"))) {
+                    holder.mStatusIcon.setVisibility(View.VISIBLE);
+                } else {
+                    holder.mStatusIcon.setVisibility(View.GONE);
+                }
 
                 /*if(mData.get("devUuid").equals(SharedPreferenceUtil.getSharedPreference(mContext, "devUuid"))) {
                     holder.mIcon.setImageResource(R.drawable.ico_35dp_device_mobile_on);
@@ -265,11 +275,10 @@ public class DevListFragment extends Fragment {
                 holder.mIcon.setImageResource(R.drawable.ico_35dp_device_giganas_on);
                 holder.mText.setTextColor(getResources().getColor(R.color.darkGray));
             } else { // bizNote
-                holder.mIcon.setImageResource(R.drawable.ico_35dp_device_giganas_on);
+                holder.mIcon.setImageResource(R.drawable.ico_35dp_biznote);
                 holder.mText.setTextColor(getResources().getColor(R.color.darkGray));
             }
 
-            holder.mText.setTypeface(Typeface.DEFAULT_BOLD);
             holder.mText.setText(mData.get("devNm"));
             holder.mDevUuid.setText(mData.get("devUuid"));
 

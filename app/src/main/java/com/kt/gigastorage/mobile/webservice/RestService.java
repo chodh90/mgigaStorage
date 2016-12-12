@@ -8,23 +8,17 @@ import com.kt.gigastorage.mobile.vo.FileEmailVO;
 import com.kt.gigastorage.mobile.vo.FileTagVO;
 import com.kt.gigastorage.mobile.vo.FoldrBasVO;
 import com.kt.gigastorage.mobile.vo.NoteBasVO;
+import com.kt.gigastorage.mobile.vo.NoteBmarkVO;
 import com.kt.gigastorage.mobile.vo.NoteListVO;
 
 import java.util.List;
 
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.Headers;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
-import retrofit2.http.Path;
 
 /**
  * Created by a-raise on 2016-09-08.
@@ -54,14 +48,6 @@ public interface RestService {
     @POST ("listFoldr.json" )
     Call<JsonObject> listFoldr(@Body FoldrBasVO foldrBasVO);
 
-    //폴더리스트상세
-    @POST ("listFoldrDtl.json" )
-    Call<JsonObject> listFoldrDtl(@Body FoldrBasVO foldrBasVO);
-
-    //폴더파일리스트
-    @POST ("listFoldrFile.json" )
-    Call<JsonObject> listFoldrFile(@Body FoldrBasVO foldrBasVO);
-
     //파일리스트
     @POST ("listFile.json" )
     Call<JsonObject> listFile(@Body FileBasVO fileBasVO);
@@ -90,33 +76,12 @@ public interface RestService {
     @POST ("mobileFoldrMetaInfoList.do" )
     Call<JsonObject> deleteFoldrMeta(@Body List<FoldrBasVO> list);
 
-    @GET("gs-{userName}/{userName}-gs{foldrPath}/{fileName}")
-    /*@Headers("Authorization: Basic Z3Mta3R1c2VyMDAxOjEyMzQ=")*/
-    Call<ResponseBody> downloadFile(@Header("Authorization") String auth, @Path("userName") String userName, @Path("foldrPath") String foldrPath, @Path("fileName")String fileName);
-
-    @Multipart
-    @POST("fileUpload.do")
-    Call<ResponseBody> uploadFile(@Part("file") RequestBody file, @Part("filename")String filename);
-
-    @POST("uploadComplete.do")
-    Call<JsonObject> nasUploadComplete(@Body ComndQueueVO comndQueueVO);
-
     @POST("reqFileDown.do")
     Call<JsonObject> nasFileDownload(@Body ComndQueueVO comndQueueVO);
-
-    @POST("nasFoldrCret.do")
-    Call<JsonObject> nasfoldrCreate(@Body FoldrBasVO foldrBasVO);
-
-    @POST("upldCmplt.do")
-    Call<JsonObject> upldCmplt(@Body ComndQueueVO comndQueueVO);
 
     //파일 속성 조회
     @POST ("fileDtl.json" )
     Call<JsonObject> fileAttrList(@Body FileBasVO fileBasVO);
-
-    //파일 속성 조회
-    @POST("imgFileThum.do?fileId={fileId}")
-    Call<JsonObject> imgFileThum(@Field("fileId") String fileId);
 
     //파일,폴더 검색
     @POST("listSearch.json")
@@ -146,6 +111,15 @@ public interface RestService {
 
     @POST("listNoteMenu.json")
     Call<JsonObject> listNoteMenu(@Body NoteBasVO noteBasVO);
+
+    @POST("mergNoteBmark.do")
+    Call<JsonObject> mergNoteBmark(@Body NoteBmarkVO noteBmarkVO);
+
+    @POST("delNoteBmark.do")
+    Call<JsonObject> delNoteBmark(@Body NoteBmarkVO noteBmarkVO);
+
+    @POST("listNoteBmark.json")
+    Call<JsonObject> listNoteBmark(@Body NoteBmarkVO noteBmarkVO);
 
     @POST("listNote.json")
     Call<JsonObject> listNote(@Body NoteListVO noteListVO);

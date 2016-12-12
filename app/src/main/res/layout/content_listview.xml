@@ -9,8 +9,8 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:id="@+id/mList"
-       android:divider="#ffffff"
-       android:dividerHeight="8dp"
-       android:layout_marginTop="10dp"/>
+       android:divider="@color/backGray"
+       android:dividerHeight="1dp"
+       android:background="@color/windowBackground"/>
 
 </LinearLayout>

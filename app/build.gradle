@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId "com.kt.gigastorage"
-        minSdkVersion 14 //android 4.0
-        targetSdkVersion 21  //andorid 5.0
+        minSdkVersion 14 // 14 -> 23 (because android statusbar color)
+        targetSdkVersion 21  // 21 -> 23 (because android statusbar color)
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -20,6 +20,21 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            applicationVariants.all { variant ->
+                variant.outputs.each {
+                    output->
+                        def file = output.outputFile
+                        output.outputFile = new File(file.parent,
+                                file.name.replace("app", "giga-" + defaultConfig.versionName))
+                }
+            }
+        }
+
+        debug {
+            signingConfig signingConfigs.debug
+            minifyEnabled false
+            proguardFile 'proguard-rules.txt'
         }
     }
 }

@@ -34,7 +34,7 @@
                     android:layout_height="fill_parent"
                     android:textSize="18sp"
                     android:text="님의 스토리지"
-                    android:textColor="#ffffff"
+                    android:textColor="@color/darkGray"
                     android:textStyle="bold"
                     android:gravity="center_vertical"
                     android:layout_weight="1"
@@ -45,18 +45,29 @@
                     android:src="@drawable/ico_18dp_top_srch"
                     android:layout_marginRight="8dp"
                     android:id="@+id/toolbar_search"/>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ico_24dp_top_align"
+                    android:layout_marginRight="8dp"
+                    android:id="@+id/toolbar_sort"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-
     <!--content 영역 (한 activity에서 화면을 변경할 수 있음)-->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/content_fragment"
         />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_temp"/>
 
 
 </LinearLayout>

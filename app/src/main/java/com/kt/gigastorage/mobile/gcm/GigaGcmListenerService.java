@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Message;
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.kt.gigastorage.mobile.service.FileService;
@@ -32,12 +31,8 @@ import static com.kt.gigastorage.mobile.webservice.impl.RestServiceImpl.READ_TIM
 
 public class GigaGcmListenerService extends GcmListenerService {
 
-    private static final String TAG = GigaGcmListenerService.class.getName();
-
     public static final String SERVER_URL = "http://222.106.202.145/GIGA_Storage/webservice/rest";
     public static final String NAS_URL = "http://222.106.202.145/namespace/ifs/home";
-    /*public static Context context = DrawerLayoutViewActivity.context;*/
-
 
     public static Message message;
     public static File file;
@@ -54,11 +49,9 @@ public class GigaGcmListenerService extends GcmListenerService {
     public static String toDevUuid = "";
     public static String toFoldr = "";
     public static String toOsCd = "";
-    public static String fromOsCd = "";
     public static String authToken = "";
     public static String token = "";
     public static String nasStatusCode = "";
-    /*public static ProgressDialog dialog;*/
 
     /**
      * 푸시가 수신될 때 호출됨
@@ -92,17 +85,6 @@ public class GigaGcmListenerService extends GcmListenerService {
 
         }catch (Exception e){
 
-        }
-
-
-
-        Log.d(TAG, "From: " + from + ", Message: " + message);
-
-        // TODO ?
-        if (from.startsWith("/topics/")) {
-            // message received from some topic.
-        } else {
-            // normal downstream message.
         }
 
         // [START_EXCLUDE]
@@ -184,6 +166,7 @@ public class GigaGcmListenerService extends GcmListenerService {
                                 encodePath += "/" + URLEncoder.encode(foldr[i], "UTF-8");
                             }
                         }
+                        encodeFile = encodeFile.replaceAll("\\+", "%20");
                         encodePath = encodePath.replaceAll("\\+", "%20");
 
                         if(toOsCd.equals("G")){
@@ -281,8 +264,6 @@ public class GigaGcmListenerService extends GcmListenerService {
     private class FileDownLoadTask extends AsyncTask<String, Integer, String> {
         @Override
         protected void onPreExecute() {
-            /*dialog = ProgressService.progress(MainActivity.context);
-            dialog.show();*/
             message = new Message();
             super.onPreExecute();
         }
@@ -338,7 +319,6 @@ public class GigaGcmListenerService extends GcmListenerService {
                 int responseCode = connection.getResponseCode();
 
                 if(responseCode == 200 || responseCode == 204) {
-                    /*dialog.dismiss();*/
                     message.what = SUCCESS;
                 }
                 inputStream.close();
@@ -346,7 +326,6 @@ public class GigaGcmListenerService extends GcmListenerService {
 
                 connection.disconnect();
             } catch (Exception e) {
-                /*dialog.dismiss();*/
                 message.what = FAILED;
             }
 
@@ -355,20 +334,17 @@ public class GigaGcmListenerService extends GcmListenerService {
 
         @Override
         protected void onPostExecute(String s) {
-            /*AlertDialog.Builder alert = AlertDialogService.alert(MainActivity.context);*/
             switch (message.what) {
                 case SUCCESS:
 
                     FileService.syncFoldrInfo();
 
-                    /*alert.setMessage("파일이 다운로드 되었습니다.");*/
-
                     break;
                 case FAILED:
-                    /*alert.setMessage("파일 다운로드가 실패하였습니다.");*/
+
                     break;
             }
-            /*alert.show();*/
+
             super.onPostExecute(s);
         }
     }
@@ -425,7 +401,6 @@ public class GigaGcmListenerService extends GcmListenerService {
 
                         response = new String(byteData);
 
-                        Log.i(TAG, "DATA response = " + response);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -436,68 +411,4 @@ public class GigaGcmListenerService extends GcmListenerService {
         }
 
     }
-
-    /*private class FileUpldFailCompltTask extends AsyncTask<String, Integer, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-
-            if(queId != null || !queId.equals("")){
-
-                HttpURLConnection conn = null;
-
-                OutputStream os = null;
-                InputStream is = null;
-                ByteArrayOutputStream baos = null;
-                String address = SERVER_URL+"/upldCmplt.do";
-                try {
-                    URL url = new URL(address);
-                    conn = (HttpURLConnection) url.openConnection();
-                    conn.setConnectTimeout(CONNECT_TIMEOUT * 1000);
-                    conn.setReadTimeout(READ_TIMEOUT * 1000);
-                    conn.setRequestMethod("POST");
-                    conn.setRequestProperty("Cache-Control", "no-cache");
-                    conn.setRequestProperty("Content-Type", "application/json");
-                    conn.setRequestProperty("Accept", "application/json");
-                    conn.setDoOutput(true);
-                    conn.setDoInput(true);
-
-                    JSONObject job = new JSONObject();
-
-                    job.put("queId", queId);
-                    job.put("authToken",authToken);
-                    job.put("nasStatusCode",999);
-                    os = conn.getOutputStream();
-                    os.write(job.toString().getBytes());
-                    os.flush();
-                    String response;
-
-                    int responseCode = conn.getResponseCode();
-
-                    if (responseCode == HttpURLConnection.HTTP_OK) {
-
-                        is = conn.getInputStream();
-                        baos = new ByteArrayOutputStream();
-                        byte[] byteBuffer = new byte[1024];
-                        byte[] byteData = null;
-                        int nLength = 0;
-                        while ((nLength = is.read(byteBuffer, 0, byteBuffer.length)) != -1) {
-                            baos.write(byteBuffer, 0, nLength);
-                        }
-                        byteData = baos.toByteArray();
-
-                        response = new String(byteData);
-
-                        Log.i(TAG, "DATA response = " + response);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    message.what = FAILED;
-                }
-            }
-            return null;
-        }
-
-
-    }*/
 }

@@ -4,7 +4,7 @@
               android:layout_height="wrap_content"
               android:minHeight="70dp"
               app:theme="@style/ThemeOverlay.AppCompat.Dark"
-              android:background="@color/darkGray"
+              android:background="#333333"
               android:orientation="horizontal"
               android:id="@+id/dev_item_area"
               android:gravity="center_vertical">
@@ -30,7 +30,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ico_18dp_device_on"
+        android:src="@drawable/ico_24dp_now"
         android:id="@+id/onOffIcon"
         android:layout_marginRight="20dp"/>
 
@@ -40,6 +40,5 @@
         android:id="@+id/devUuid"
         android:text="devUuid"
         android:visibility="gone"/>
-
 
 </LinearLayout>

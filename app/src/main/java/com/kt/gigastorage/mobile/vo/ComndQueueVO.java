@@ -307,5 +307,4 @@ public class ComndQueueVO {
     public void setFoldrId(String foldrId) {
         this.foldrId = foldrId;
     }
-
 }

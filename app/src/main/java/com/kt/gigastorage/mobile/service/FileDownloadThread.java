@@ -8,7 +8,6 @@ import android.os.Environment;
 import android.os.Message;
 import android.util.Base64;
 
-import com.kt.gigastorage.mobile.activity.DrawerLayoutViewActivity;
 import com.kt.gigastorage.mobile.activity.MainActivity;
 import com.kt.gigastorage.mobile.activity.R;
 import com.kt.gigastorage.mobile.utils.DeviceUtil;
@@ -37,7 +36,9 @@ public class FileDownloadThread extends AsyncTask<String, Integer, String> {
 
         public static String userId = SharedPreferenceUtil.getSharedPreference(MainActivity.context,"userId");
         public static String password = SharedPreferenceUtil.getSharedPreference(MainActivity.context,"password");
-        public  static  String devUuid;
+        public static String fileNm;
+        public static String appPlay;
+        public static  String devUuid;
 
         private Context mContext;
 
@@ -51,7 +52,7 @@ public class FileDownloadThread extends AsyncTask<String, Integer, String> {
             message = new Message();
             mProgDlg = new ProgressDialog(context);
             mProgDlg.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            mProgDlg.setMessage("다운로드중입니다...");
+            mProgDlg.setMessage("다운로드 중입니다...");
             mProgDlg.show();
 
             super.onPreExecute();
@@ -62,6 +63,9 @@ public class FileDownloadThread extends AsyncTask<String, Integer, String> {
             InputStream inputStream = null;
             OutputStream outputStream = null;
             try{
+                fileNm = params[1];
+                appPlay = params[3];
+
                 String[] foldr = params[0].split("/");
                 String encodePath = "";
                 String encodeFile = URLEncoder.encode(params[1], "UTF-8");
@@ -135,14 +139,19 @@ public class FileDownloadThread extends AsyncTask<String, Integer, String> {
             switch (message.what) {
                 case SUCCESS:
                     FileService.syncFoldrInfo();
-                    alert.setMessage("파일 다운로드를 성공하였습니다.");
-
+                    if(appPlay.equals("Y")){
+                        FileViewService.viewFile(context,"/Mobile",fileNm);
+                    }else{
+                        alert.setMessage("파일 다운로드를 성공하였습니다.");
+                        alert.show();
+                    }
                     break;
                 case FAILED:
                     alert.setMessage("파일 다운로드 실패하였습니다.");
+                    alert.show();
                     break;
             }
-            alert.show();
+
             super.onPostExecute(s);
         }
 }

@@ -3,9 +3,6 @@ package com.kt.gigastorage.mobile.service;
 import android.app.ProgressDialog;
 import android.content.Context;
 
-import com.kt.gigastorage.mobile.activity.DrawerLayoutViewActivity;
-import com.kt.gigastorage.mobile.activity.MainActivity;
-
 /**
  * Created by araise on 2016-11-03.
  */

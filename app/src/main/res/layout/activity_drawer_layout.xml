@@ -21,20 +21,20 @@
         android:fitsSystemWindows="true"
         app:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:headerLayout="@layout/nav_header"
-        app:itemIconTint="#FFFFFF"
-        app:itemTextColor="#FFFFFF" >
+        app:itemIconTint="@color/backGray"
+        app:itemTextColor="@color/darkGray" >
 
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:divider="#333"
+            android:divider="#666666"
             android:dividerHeight="1dp"
             android:layout_gravity="start"
             android:choiceMode="singleChoice"
             android:id="@+id/navList"
-            android:layout_marginTop="90dp"
-            android:background="@color/darkGray"
+            android:layout_marginTop="150dp"
+            android:background="#333333"
             >
         </ListView>
 

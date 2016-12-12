@@ -143,48 +143,39 @@ public class FileUtil {
 
     public static int getIconByEtsion(String etsionNm) {
 
-        String iconFileNm = "";
-        int test = 0;
+        int icoInt = 0;
 
-        if(etsionNm.equals("avi")) {
-            test = R.drawable.ico_24dp_filetype_avi;
-        } else if(etsionNm.equals("css")) {
-            test = R.drawable.ico_24dp_filetype_css;
-        } else if(etsionNm.equals("dll")) {
-            test = R.drawable.ico_24dp_filetype_dll;
-        } else if(etsionNm.equals("doc")) {
-            test = R.drawable.ico_24dp_filetype_doc;
-        } else if(etsionNm.equals("htm")) {
-            test = R.drawable.ico_24dp_filetype_htm;
-        } else if(etsionNm.equals("hwp")) {
-            test = R.drawable.ico_24dp_filetype_hwp;
-        } else if(etsionNm.equals("jpg")) {
-            test = R.drawable.ico_24dp_filetype_jpg;
-        } else if(etsionNm.equals("mov")) {
-            test = R.drawable.ico_24dp_filetype_mov;
-        } else if(etsionNm.equals("mp3")) {
-            test = R.drawable.ico_24dp_filetype_mp3;
+        if(etsionNm.equals("css")) {
+            icoInt = R.drawable.ico_24dp_filetype_code;
+        } else if(etsionNm.equals("doc") || etsionNm.equals("docx") ) {
+            icoInt = R.drawable.ico_24dp_filetype_doc;
+        }else if(etsionNm.equals("hwp")) {
+            icoInt = R.drawable.ico_24dp_filetype_hwp;
+        }else if(etsionNm.equals("exe")) {
+            icoInt = R.drawable.ico_24dp_filetype_exe;
+        }else if(etsionNm.equals("avi") || etsionNm.equals("mp4") || etsionNm.equals("mkv") || etsionNm.equals("mpg") || etsionNm.equals("mpeg") || etsionNm.equals("wmv") ){
+            icoInt = R.drawable.ico_24dp_filetype_film;
+        }else if(etsionNm.equals("jpg") || etsionNm.equals("png")) {
+            icoInt = R.drawable.ico_24dp_filetype_img;
         } else if(etsionNm.equals("pdf")) {
-            test = R.drawable.ico_24dp_filetype_pdf;
-        } else if(etsionNm.equals("png")) {
-            test = R.drawable.ico_24dp_filetype_png;
-        } else if(etsionNm.equals("ppt")) {
-            test = R.drawable.ico_24dp_filetype_ppt;
-        } else if(etsionNm.equals("psd")) {
-            test = R.drawable.ico_24dp_filetype_psd;
+            icoInt = R.drawable.ico_24dp_filetype_pdf;
+        } else if(etsionNm.equals("ppt") || etsionNm.equals("pptx")) {
+            icoInt = R.drawable.ico_24dp_filetype_ppt;
+        } else if(etsionNm.equals("mp3") || etsionNm.equals("wav") || etsionNm.equals("ogg") || etsionNm.equals("wma")) {
+            icoInt = R.drawable.ico_24dp_filetype_sound;
         } else if(etsionNm.equals("txt")) {
-            test = R.drawable.ico_24dp_filetype_txt;
-        } else if(etsionNm.equals("wav")) {
-            test = R.drawable.ico_24dp_filetype_wav;
-        } else if(etsionNm.equals("xls")) {
-            test = R.drawable.ico_24dp_filetype_xls;
+            icoInt = R.drawable.ico_24dp_filetype_txt;
+        } else if(etsionNm.equals("htm") || etsionNm.equals("html")) {
+            icoInt = R.drawable.ico_24dp_filetype_webcode;
+        } else if(etsionNm.equals("xls") || etsionNm.equals("xlsx")) {
+            icoInt = R.drawable.ico_24dp_filetype_xls;
         } else if(etsionNm.equals("zip")) {
-            test = R.drawable.ico_24dp_filetype_zip;
+            icoInt = R.drawable.ico_24dp_filetype_zip;
         } else {
-            test = R.drawable.ico_24dp_filetype_etc;
+            icoInt = R.drawable.ico_24dp_filetype_etc;
         }
 
-        return test;
+        return icoInt;
 
     }
 

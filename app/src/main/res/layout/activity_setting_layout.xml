@@ -30,13 +30,18 @@
                 android:textSize="18sp"
                 android:layout_marginLeft="5dp"
                 android:text="설정"
-                android:textColor="#ffffff"
+                android:textColor="@color/darkGray"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
                 android:layout_weight="1"/>
 
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/toolbar_shadow"/>
 
     <LinearLayout
         android:orientation="vertical"

@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -29,7 +28,6 @@ import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by araise on 2016-11-01.
@@ -114,9 +112,9 @@ public class TagEditActivity extends Activity {
             final TextView textView = new TextView(this);
             final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-            textView.setTextColor(Color.DKGRAY);
-            textView.setTextSize(18);
-            textView.setBackgroundColor(Color.parseColor("#FFF5F5F5"));
+            textView.setTextColor(getResources().getColor(R.color.darkGray));
+            textView.setTextSize(14);
+            textView.setBackgroundColor(getResources().getColor(R.color.backGray));
             if(tagArray.get(i) != null){
                 textView.setText("#"+tagArray.get(i).toString());
 
@@ -124,7 +122,7 @@ public class TagEditActivity extends Activity {
                 int imageDp = (int)(image * dp);
 
                 imageView = new ImageView(this);
-                Drawable drawable = getResources().getDrawable(R.drawable.ico_24dp_tag_del);
+                Drawable drawable = getResources().getDrawable(R.drawable.ico_18dp_tag_del);
 
                 imageView.setId(i);
                 imageView.setMinimumWidth(imageDp);
@@ -176,8 +174,12 @@ public class TagEditActivity extends Activity {
         @Override
         public void onClick(View v) {
             String tagValue = tagEdit.getText().toString();
+            String check = spaceCheck(tagValue);
             if(tagValue == null || tagValue.equals("")){
                 alert.setMessage("태그 정보를 입력해 주세요.");
+                alert.show();
+            }else if(check.equals("N")){
+                alert.setMessage("태그 정보에 공백을 제거해주세요.");
                 alert.show();
             }else{
                 tagArray.add(tagValue);
@@ -281,5 +283,26 @@ public class TagEditActivity extends Activity {
             finish();
         }
     };
+
+    public String spaceCheck(String tagText) {
+        boolean tagCheck = false;
+
+        String check = "N";
+
+        for(int i = 0 ; i < tagText.length() ; i++) {
+            if(tagText.charAt(i) == ' '){
+                tagCheck = true;
+            }
+
+        }
+
+        if(tagCheck == false){
+            check = "Y";
+        }else{
+            return check;
+        }
+
+        return check;
+    }
 
 }

@@ -6,7 +6,7 @@
               android:orientation="vertical">
 
    <LinearLayout
-       android:orientation="horizontal"
+       android:orientation="vertical"
        android:layout_width="match_parent"
        android:layout_height="40dp"
        android:background="@color/backGray">
@@ -20,7 +20,21 @@
           android:textColor="@color/darkGray"
           tools:text="@string/app_name"
           android:gravity="fill_vertical"
-          android:layout_marginLeft="10dp"/>
+          android:layout_marginLeft="25dp"/>
+<!--
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="25dp">
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="horizontal"
+             android:id="@+id/dirNaviList">
+
+         </LinearLayout>
+      </LinearLayout>
+-->
    </LinearLayout>
 
    <com.baoyz.swipemenulistview.SwipeMenuListView
@@ -29,6 +43,7 @@
        android:layout_height="match_parent"
        android:dividerHeight="1dp"
        android:divider="@color/lineGray"
+       android:background="@color/windowBackground"
        />
 
 </LinearLayout>

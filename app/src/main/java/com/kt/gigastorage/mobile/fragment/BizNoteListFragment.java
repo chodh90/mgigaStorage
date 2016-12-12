@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -27,9 +28,12 @@ import com.google.gson.JsonObject;
 import com.kt.gigastorage.mobile.activity.DrawerLayoutViewActivity;
 import com.kt.gigastorage.mobile.activity.MainActivity;
 import com.kt.gigastorage.mobile.activity.R;
+import com.kt.gigastorage.mobile.service.AlertDialogService;
 import com.kt.gigastorage.mobile.service.ResponseFailCode;
+import com.kt.gigastorage.mobile.utils.FileUtil;
 import com.kt.gigastorage.mobile.utils.SharedPreferenceUtil;
 import com.kt.gigastorage.mobile.vo.NoteBasVO;
+import com.kt.gigastorage.mobile.vo.NoteBmarkVO;
 import com.kt.gigastorage.mobile.vo.NoteListVO;
 import com.kt.gigastorage.mobile.webservice.impl.RestServiceImpl;
 
@@ -56,12 +60,14 @@ public class BizNoteListFragment extends Fragment {
 
     private NoteBasVO mNoteBasVO = new NoteBasVO();
     private NoteListVO mNoteListVO = new NoteListVO();
+    private NoteBmarkVO noteBmarkVO = new NoteBmarkVO();
     private TextView dirNavi = null;
+    private String userId;
+    private boolean bookMarkFlag;
+    private AlertDialog.Builder alert;
 
     public static Context context;
-    private String devNm = ""; // 해당기기명
 
-    private ArrayList<String> rootFolders = new ArrayList<>();
     private ArrayList<String> rootFolderNms = new ArrayList<>();
     private boolean[] swipeStateList;
     private Map<String, String> item;
@@ -69,12 +75,25 @@ public class BizNoteListFragment extends Fragment {
     private int mIndex;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        if(getArguments() != null) {
+            mNoteListVO.setNoteId(getArguments().getString("noteId"));
+        }
 
+        super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = DrawerLayoutViewActivity.context;
         View view = inflater.inflate(R.layout.content_swipe_listview, container, false);
-
         setHasOptionsMenu(true);
+
+        userId = SharedPreferenceUtil.getSharedPreference(context,"userId");
+        bookMarkFlag = false;
+        alert = AlertDialogService.alert(context);
+
 
         swipeStateList = new boolean[0];
 
@@ -87,7 +106,13 @@ public class BizNoteListFragment extends Fragment {
         mListView.setAdapter(mAdapter); // swipeMenuListView에 어댑터 연결
 
         mNoteBasVO.setUserId(SharedPreferenceUtil.getSharedPreference(getActivity(),"userId"));
-        getNoteMenuListWebservice();
+        noteBmarkVO.setUserId(SharedPreferenceUtil.getSharedPreference(getActivity(),"userId"));
+        if(mNoteListVO.getNoteId() == null){
+            getNoteMenuListWebservice();
+        }else{
+            getNoteListWebservice(mNoteListVO);
+        }
+
 
         //Toolbar toolbar = (Toolbar) ((DrawerLayoutViewActivity)DrawerLayoutViewActivity.context).findViewById(R.id.toolbar);
         //toolbar.setOverflowIcon(ContextCompat.getDrawable(DrawerLayoutViewActivity.context, R.drawable.ico_24dp_top_align));
@@ -99,14 +124,29 @@ public class BizNoteListFragment extends Fragment {
             public void create(SwipeMenu menu) {
 
                 SwipeMenuItem detailItem = new SwipeMenuItem(getActivity());
+                SwipeMenuItem bMarkItem = new SwipeMenuItem(getActivity());
                 SwipeMenuItem blankItem = new SwipeMenuItem(getActivity());
 
                 switch (menu.getViewType()) {
-                    case 0: // 폴더
+                    case 0: // bizNote 폴더
+                        bMarkItem = new SwipeMenuItem(getActivity());
+                        bMarkItem.setBackground(R.color.baseColor);
+                        bMarkItem.setWidth(dp2px(80));
+                        bMarkItem.setIcon(R.drawable.ico_18dp_bookmark);
+                        bMarkItem.setTitle("북마크 추가");
+                        bMarkItem.setTitleSize(12);
+                        bMarkItem.setTitleColor(R.color.darkGray);
+
+                        blankItem = new SwipeMenuItem(getActivity());
+                        blankItem.setBackground(R.color.baseColor);
+                        blankItem.setWidth(dp2px(235));
+
+                        menu.addMenuItem(bMarkItem);
+                        menu.addMenuItem(blankItem);
                         break;
                     case 1: //파일
                         detailItem = new SwipeMenuItem(getActivity());
-                        detailItem.setBackground(R.color.backGray);
+                        detailItem.setBackground(R.color.baseColor);
                         detailItem.setWidth(dp2px(80));
                         detailItem.setIcon(R.drawable.ico_18dp_contextmenu_info);
                         detailItem.setTitle("속성보기");
@@ -114,10 +154,30 @@ public class BizNoteListFragment extends Fragment {
                         detailItem.setTitleColor(R.color.darkGray);
 
                         blankItem = new SwipeMenuItem(getActivity());
-                        blankItem.setBackground(R.color.backGray);
+                        blankItem.setBackground(R.color.baseColor);
                         blankItem.setWidth(dp2px(235));
 
                         menu.addMenuItem(detailItem);
+                        menu.addMenuItem(blankItem);
+                        break;
+                    case 2: // root 책갈피
+                        break;
+                    case 3: // .. 폴더
+                        break;
+                    case 4: // 책갈피 삭제
+                        bMarkItem = new SwipeMenuItem(getActivity());
+                        bMarkItem.setBackground(R.color.baseColor);
+                        bMarkItem.setWidth(dp2px(80));
+                        bMarkItem.setIcon(R.drawable.ico_18dp_bookmark_del);
+                        bMarkItem.setTitle("북마크 삭제");
+                        bMarkItem.setTitleSize(12);
+                        bMarkItem.setTitleColor(R.color.darkGray);
+
+                        blankItem = new SwipeMenuItem(getActivity());
+                        blankItem.setBackground(R.color.baseColor);
+                        blankItem.setWidth(dp2px(235));
+
+                        menu.addMenuItem(bMarkItem);
                         menu.addMenuItem(blankItem);
                         break;
                 }
@@ -135,19 +195,44 @@ public class BizNoteListFragment extends Fragment {
                 mIndex = position;
                 View view = mAdapter.getViewByPosition(position,mListView);
                 ((ImageView)view.findViewById(contextIcon)).setImageResource(R.drawable.ico_36dp_context_open);
-
-                switch (menu.getViewType()) {
-                    case 0: // 폴더
-                        break;
-                    case 1: // 파일
-                        switch (index) {
-                            case 0: // 속성보기
-                                DrawerLayoutViewActivity dlv = (DrawerLayoutViewActivity)getActivity();
-                                dlv.intentNoteFileAttrViewActivity(item);
-                                break;
-                        }
-                        break;
-                }
+                    switch (menu.getViewType()) {
+                        case 0: // 폴더
+                            switch (index) {
+                                case 0: // 북마크 추가
+                                    Object obj = (Object)item.get("noteId");
+                                    noteBmarkVO.setNoteId(obj.toString());
+                                    mergNoteBmark(noteBmarkVO);
+                                    break;
+                            }
+                            break;
+                        case 1: // 파일
+                            switch (index) {
+                                case 0: // 속성보기
+                                    DrawerLayoutViewActivity dlv = (DrawerLayoutViewActivity)getActivity();
+                                    dlv.intentNoteFileAttrViewActivity(item);
+                                    break;
+                            }
+                            break;
+                        case 4: // 북마크 삭제
+                            switch (index) {
+                                case 0: // 북마크 삭제
+                                    Object obj = (Object)item.get("noteId");
+                                    noteBmarkVO.setNoteId(obj.toString());
+                                    delNoteBmark(noteBmarkVO);
+                                    alert.setMessage("북마크가 삭제 되었습니다.");
+                                    alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();     //닫기
+                                            mListData.remove(mIndex);
+                                            mAdapter.notifyDataSetChanged();
+                                        }
+                                    });
+                                    alert.show();
+                                    break;
+                            }
+                            break;
+                    }
 
                 return false;
             }
@@ -200,7 +285,15 @@ public class BizNoteListFragment extends Fragment {
                     String message = new ResponseFailCode().responseFail(statusCode);
                     AlertDialog.Builder alert = new AlertDialog.Builder(context);
                     if(statusCode == 100) {
+                        bookMarkFlag = false;
+                        mListData = new ArrayList<Map<String, String>>();
                         mListData = gson.fromJson(response.body().get("listData"), List.class);
+                        dirNavi.setText("> BizNote");
+                        Map<String, String> bookMark = new ArrayMap<String, String>();
+                        bookMark.put("userId", userId);
+                        bookMark.put("noteNm", "책갈피");
+                        bookMark.put("bookMark","bookMark");
+                        mListData.add(bookMark);
                         mAdapter.notifyDataSetChanged();
                         swipeStateList = new boolean[mListData.size()];
                     }else if(statusCode == 400) {
@@ -245,7 +338,176 @@ public class BizNoteListFragment extends Fragment {
         });
     }
 
-    private void getNoteListWebservice() {
+    private void mergNoteBmark(NoteBmarkVO noteBmarkVO) {
+        Call<JsonObject> mergNoteBmarkCall = RestServiceImpl.getInstance(null).mergNoteBmark(noteBmarkVO);
+        mergNoteBmarkCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Response<JsonObject> response) {
+                if (response.isSuccess()) {
+                    Gson gson = new Gson();
+                    int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
+                    String message = new ResponseFailCode().responseFail(statusCode);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    if(statusCode == 100) {
+
+                    }else if(statusCode == 400) {
+                        alert.setMessage(message);
+                        alert.show();
+                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();     //닫기
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+                        });
+                    }else if(statusCode != 100 && statusCode != 400){
+                        alert.setMessage(message);
+                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();     //닫기
+                            }
+                        });
+                        alert.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setMessage(context.getString(R.string.serverOut));
+                alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();     //닫기
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+    }
+    private void delNoteBmark(NoteBmarkVO bmarkVO) {
+        Call<JsonObject> delNoteBmarkCall = RestServiceImpl.getInstance(null).delNoteBmark(bmarkVO);
+        delNoteBmarkCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Response<JsonObject> response) {
+                if (response.isSuccess()) {
+                    Gson gson = new Gson();
+                    int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
+                    String message = new ResponseFailCode().responseFail(statusCode);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    if(statusCode == 100) {
+
+                    }else if(statusCode == 400) {
+                        alert.setMessage(message);
+                        alert.show();
+                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();     //닫기
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+                        });
+                    }else if(statusCode != 100 && statusCode != 400){
+                        alert.setMessage(message);
+                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();     //닫기
+                            }
+                        });
+                        alert.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setMessage(context.getString(R.string.serverOut));
+                alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();     //닫기
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+    }
+
+    private void getNoteBmarkListWebservice(NoteBmarkVO noteBmarkVO) {
+        Call<JsonObject> listNoteBmarkCall = RestServiceImpl.getInstance(null).listNoteBmark(noteBmarkVO);
+        listNoteBmarkCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Response<JsonObject> response) {
+                if (response.isSuccess()) {
+                    Gson gson = new Gson();
+                    int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
+                    String message = new ResponseFailCode().responseFail(statusCode);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    if(statusCode == 100) {
+                        mListData = new ArrayList<Map<String, String>>();
+                        bookMarkFlag = true;
+                        Map<String, String> rootFoldr = new ArrayMap<String, String>();
+                        rootFoldr.put("noteNm", "..");
+                        mListData.add(rootFoldr);
+                        mListData.addAll(gson.fromJson(response.body().get("listData"), List.class));
+                        dirNavi.setText("> 책갈피");
+                        mAdapter.notifyDataSetChanged();
+                        swipeStateList = new boolean[mListData.size()];
+                    }else if(statusCode == 400) {
+                        alert.setMessage(message);
+                        alert.show();
+                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();     //닫기
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+                        });
+                    }else if(statusCode != 100 && statusCode != 400){
+                        alert.setMessage(message);
+                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();     //닫기
+                            }
+                        });
+                        alert.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setMessage(context.getString(R.string.serverOut));
+                alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();     //닫기
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+    }
+
+    public void getNoteListWebservice(NoteListVO mNoteListVO) {
 
         Call<JsonObject> lisfFileCall = RestServiceImpl.getInstance(null).listNote(mNoteListVO);
         lisfFileCall.enqueue(new Callback<JsonObject>() {
@@ -353,7 +615,7 @@ public class BizNoteListFragment extends Fragment {
 
         @Override
         public int getViewTypeCount() {
-            return 5;
+            return 6;
         }
 
         @Override
@@ -363,6 +625,26 @@ public class BizNoteListFragment extends Fragment {
 
             if(getItem(position).get("fileId") != null) {
                 returnPos = 1;
+            }else if(getItem(position).get("bookMark") != null){
+                if(getItem(position).get("noteNm").equals("..")){
+                    returnPos = 2;
+                }else{
+                    returnPos = 3;
+                }
+            }else{
+                if(bookMarkFlag == true){
+                    if(!getItem(position).get("noteNm").equals("..")){
+                        returnPos = 4;
+                    }else{
+                        returnPos = 2;
+                    }
+                }else{
+                    if(!getItem(position).get("noteNm").equals("..")){
+                        returnPos = 0;
+                    }else{
+                        returnPos = 2;
+                    }
+                }
             }
             return returnPos;
         }
@@ -386,44 +668,66 @@ public class BizNoteListFragment extends Fragment {
 
             if(mData.get("fileId") == null) {
 
-                holder.additionArea.setVisibility(View.GONE);
-                holder.contextIcon.setVisibility(View.GONE);
                 holder.iv_icon.setImageResource(R.drawable.ico_36dp_folder);
                 holder.tv_name.setText(mData.get("noteNm"));
+                if(mData.get("noteNm").equals("..")){
+                    holder.additionArea.setVisibility(View.GONE);
+                    holder.contextIcon.setVisibility(View.GONE);
+                }else if(mData.get("noteNm").equals("책갈피")){
+                    holder.additionArea.setVisibility(View.GONE);
+                    holder.contextIcon.setVisibility(View.GONE);
+                }else{
+                    holder.additionArea.setVisibility(View.VISIBLE);
+                    holder.contextIcon.setVisibility(View.VISIBLE);
+                }
                 Object obj = mData.get("noteId");
-                if(obj == null) {
-                    convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
 
+                if(obj == null && !mData.get("noteNm").equals("책갈피")) {
+                    convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            getNoteMenuListWebservice();
+
+                            if(bookMarkFlag == false){
+                                getNoteMenuListWebservice();
+                            }else if(dirNavi.getText().equals("> 책갈피")){
+                                getNoteMenuListWebservice();
+                            }else{
+                                getNoteBmarkListWebservice(noteBmarkVO);
+                            }
+
                         }
                     });
-                } else {
+                }else if(mData.get("noteNm").equals("책갈피")){
                     convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
-
+                        @Override
+                        public void onClick(View v) {
+                            if(mData.get("noteNm").equals("..")){
+                                getNoteMenuListWebservice();
+                            }else{
+                                getNoteBmarkListWebservice(noteBmarkVO);
+                            }
+                        }
+                    });
+                }else {
+                    convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
                             Map<String,String> itemMap = getItem(position);
                             mNoteListVO.setNoteId(((Object)mData.get("noteId")).toString());
-                            getNoteListWebservice();
+                            getNoteListWebservice(mNoteListVO);
+                            dirNavi.setText("> " + mData.get("noteNm"));
                         }
                     });
                 }
             } else {
                 holder.additionArea.setVisibility(View.VISIBLE);
                 holder.contextIcon.setVisibility(View.VISIBLE);
-                holder.iv_icon.setImageResource(R.drawable.ico_36dp_filetype_etc);
+                String etsionNm = mData.get("etsionNm");
+                int resourceInt = FileUtil.getIconByEtsion(etsionNm);
+                holder.iv_icon.setImageResource(resourceInt);
                 holder.tv_name.setText(mData.get("fileNm"));
                 holder.cretDate.setText(mData.get("cretDate"));
-                if(mData.get("osCd").equals("W")) {
-                    holder.dev_icon.setImageResource(R.drawable.ico_18dp_device_giganas_off);
-                } else if(mData.get("osCd").equals("A")) {
-                    holder.dev_icon.setImageResource(R.drawable.ico_18dp_device_mobile_off);
-                } else {
-                    holder.dev_icon.setImageResource(R.drawable.ico_18dp_device_giganas_off);
-                }
                 holder.devNm.setText(mData.get("devNm"));
                 Object obj = mData.get("fileId");
             }

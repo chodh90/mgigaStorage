@@ -43,12 +43,12 @@
         <activity android:name=".NoteFileAttrViewActivity" />
         <activity android:name=".TempActivity"/>
         <activity android:name=".PopupDevNmActivity"
-                  android:theme="@android:style/Theme.Dialog"
-                  android:screenOrientation="portrait">
+            android:theme="@android:style/Theme.Dialog"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".PopupCcActivity"
-                  android:theme="@android:style/Theme.Dialog"
-                  android:screenOrientation="portrait">
+            android:theme="@android:style/Theme.Dialog"
+            android:screenOrientation="portrait">
         </activity>
         <!-- ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
@@ -60,7 +60,7 @@
             android:permission="com.google.android.c2dm.permission.SEND" >
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-                <category android:name="com.kt.gigastorage.mobile.activity" />
+                <category android:name="com.kt.gigastorage.mobile.gcm" />
             </intent-filter>
         </receiver>
         <!-- [END gcm_receiver] -->

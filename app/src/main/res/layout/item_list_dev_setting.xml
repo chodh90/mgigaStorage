@@ -9,10 +9,10 @@
 
     <ImageView
         android:id="@+id/devImg"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:src="@drawable/ico_35dp_device_giganas_on"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="25dp"
         android:layout_marginRight="15dp"/>
 
     <LinearLayout
@@ -26,8 +26,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/devNmTxt"
             android:layout_weight="1"
-            android:textColor="#000000"
-            android:textStyle="bold"
+            android:textColor="@color/mainItem"
             android:textSize="18sp"
             android:gravity="center_vertical"
             android:layout_marginTop="10dp"/>
@@ -37,6 +36,7 @@
             android:layout_height="wrap_content"
             android:textColor="#000000"
             android:textColorHint="@color/lightGray"
+            android:textSize="16sp"
             android:hint="GiGA NAS"
             android:id="@+id/devNmEdt"
             android:focusable="false"

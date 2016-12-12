@@ -51,6 +51,7 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
     private List<Map<String, String>> mListData = new ArrayList<>();
     private NavigationView navigationView = null;
     private TextView toolbarTitle = null;
+    private ImageView toolbarSort;
     private DrawerLayout drawer = null;
     private Toolbar toolbar = null;
     private ImageView search;
@@ -92,6 +93,8 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        toolbarSort = (ImageView)findViewById(R.id.toolbar_sort);
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.app_name, R.string.app_name);
@@ -106,6 +109,7 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
         TextView home = (TextView) navigationView.getHeaderView(0).findViewById(R.id.nav_header_title);
 
         mListView = (ListView) navigationView.findViewById(R.id.navList);
+        mListView.setBackgroundColor(getResources().getColor(R.color.naviHeader));
 
         mAdapter = new ListViewAdapter();
         mListView.setAdapter(mAdapter);
@@ -180,11 +184,11 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
                         alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();     //닫기
-                            Intent intent = new Intent(context, MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                            activity.finish();
+                                dialog.dismiss();     //닫기
+                                Intent intent = new Intent(context, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                activity.finish();
                             }
                         });
                     }else if(statusCode != 100 && statusCode != 400){
@@ -223,15 +227,21 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
         toolbarTitle.setText(titleNm);
     }
 
-    public void changeBizFragment() {
+    public void changeBizFragment(String bizNote,Bundle args) {
 
         search.setVisibility(View.GONE);
+        toolbarSort.setVisibility(View.GONE);
         Fragment fragment = new BizNoteListFragment();
+        fragment.setArguments(args);
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
 
         transaction.replace(R.id.content_fragment, fragment);
+        if(bizNote.equals("bizNote")){
+            transaction.commit();
+        }else{
+            transaction.commitAllowingStateLoss();
+        }
 
-        transaction.commit();
     }
 
     public void changeFragment(Bundle args) {
@@ -313,8 +323,9 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
                 args.putString("osCd", data.get("osCd"));
                 changeFragment(args);
             }else if(data.get("osCd").equals("B")) {
+                Bundle args = new Bundle();
                 setToolbarTitle(data.get("devNm"));
-                changeBizFragment();
+                changeBizFragment("bizNote",args);
             }else{//로그아웃
                 AlertDialog.Builder dialog = new AlertDialog.Builder(context);
                 dialog.setTitle("로그아웃 하시겠습니까?");
@@ -363,6 +374,7 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
         Object ascNoteId2 = (Object) item.get("ascNoteId2");
 
         intent.putExtra("fileId", fileId.toString());
+        intent.putExtra("foldrWholePathNm", item.get("foldrWholePathNm"));
         intent.putExtra("ascNoteId1", ascNoteId1.toString());
         intent.putExtra("ascNoteId2", ascNoteId2.toString());
 
@@ -461,26 +473,18 @@ public class DrawerLayoutViewActivity extends AppCompatActivity
                 }
             } else if(mData.get("osCd").equals("A")) { // Android
 
-                //TODO - 안드로이드폰은 우선 다 ON으로 되어있는 것으로
+                //안드로이드폰은 다 ON
                 holder.mIcon.setImageResource(R.drawable.ico_24dp_device_mobile);
                 holder.mText.setTextColor(getResources().getColor(R.color.windowBackground));
-
-                /*if(mData.get("devUuid").equals(SharedPreferenceUtil.getSharedPreference(context, "devUuid"))) {
-                    holder.mIcon.setImageResource(R.drawable.ico_24dp_device_mobile);
-                    holder.mText.setTextColor(getResources().getColor(R.color.windowBackground));
-                } else {
-                    holder.mIcon.setImageResource(R.drawable.ico_24dp_device_mobile_off);
-                    holder.mText.setTextColor(getResources().getColor(R.color.disabledGrayToNavi));
-                }*/
 
             } else if(mData.get("osCd").equals("G")) { // GiGA NAS
                 holder.mIcon.setImageResource(R.drawable.ico_24dp_device_giganas);
                 holder.mText.setTextColor(getResources().getColor(R.color.windowBackground));
             } else if(mData.get("osCd").equals("B")){ // bizNote
-                holder.mIcon.setImageResource(R.drawable.ico_24dp_device_giganas);
+                holder.mIcon.setImageResource(R.drawable.ico_24dp_biznote_wh);
                 holder.mText.setTextColor(getResources().getColor(R.color.windowBackground));
             } else{
-                holder.mIcon.setImageResource(R.drawable.ico_24dp_device_pc_off);
+                holder.mIcon.setImageResource(R.drawable.ico_24dp_logout);
                 holder.mText.setTextColor(getResources().getColor(R.color.disabledGrayToNavi));
                 holder.mStatusIcon.setVisibility(View.GONE);
             }

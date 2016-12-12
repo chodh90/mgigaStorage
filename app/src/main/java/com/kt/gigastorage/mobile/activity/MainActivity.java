@@ -45,10 +45,11 @@ public class MainActivity extends Activity {
 
     public static Context context;
     public static DrawerLayoutViewActivity activity;
+    public static Activity mainActivity;
     public static Log log;
 
-    private EditText userId;
-    private EditText password;
+    public static EditText userId;
+    public static EditText password;
     private Button loginBtn;
     private ToggleButton toggleButton;
     private LinearLayout background;
@@ -71,6 +72,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mainActivity = MainActivity.this;
         context = MainActivity.this;
         alert = AlertDialogService.alert(context);
         userId = (EditText) findViewById(R.id.input_id);
@@ -246,7 +248,6 @@ public class MainActivity extends Activity {
                 Gson gson = new Gson();
                 int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
                 String message = new ResponseFailCode().responseFail(statusCode);
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 if(statusCode == 100){
                     FileService.syncFoldrInfo();
                     mProgDlg.dismiss();
@@ -294,12 +295,10 @@ public class MainActivity extends Activity {
 
                 int responseCode = response.code();
                 mProgDlg.dismiss();
-
+                Gson gson = new Gson();
+                String msg = "";
                 if(responseCode == 200) {
-                    Gson gson = new Gson();
                     int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
-                    String message = new ResponseFailCode().responseFail(statusCode);
-                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
                     if(statusCode == 100) {
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.xAuthToken), response.raw().header(getString(R.string.xAuthToken)));
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.userId), userId.getText().toString());
@@ -307,6 +306,9 @@ public class MainActivity extends Activity {
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.cookie), response.raw().header(getString(R.string.cookie)));
                         errorMsg.setText("");
                         deviceAuth();
+                    }else if(statusCode == 410){
+                        msg = gson.fromJson(response.body().get("message"), String.class);
+                        errorMsg.setText(msg);
                     }
                 } else if(responseCode == 410) {
                     errorMsg.setText("아이디와 비밀번호를 확인해 주세요");

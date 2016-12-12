@@ -9,9 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
-import com.google.android.gms.gcm.GcmPubSub;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.kt.gigastorage.mobile.activity.R;
@@ -21,11 +19,11 @@ import java.io.IOException;
 
 public class GigaRegistrationIntentService extends IntentService {
 
-    private static final String TAG = GigaRegistrationIntentService.class.getName();
-    private static final String[] TOPICS = {"global"};
+    /*private static final String TAG = GigaRegistrationIntentService.class.getName();*/
+    /*private static final String[] TOPICS = {"global"};*/
 
     public GigaRegistrationIntentService() {
-        super(TAG);
+        super(GigaRegistrationIntentService.class.getName());
     }
 
     @Override
@@ -41,17 +39,18 @@ public class GigaRegistrationIntentService extends IntentService {
             // See https://developers.google.com/cloud-messaging/android/start for details on this file.
             // [START get_token]
             InstanceID instanceID = InstanceID.getInstance(this);
-            //TODO - sender_id는 여기에
+
+            //sender_id
             String token = instanceID.getToken(getString(R.string.sender_id),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             // [END get_token]
-            Log.i(TAG, "GCM Registration Token: " + token);
+            /*Log.i(TAG, "GCM Registration Token: " + token);*/
 
-            // TODO: Implement this method to send any registration to your app's servers.
+            //Implement this method to send any registration to your app's servers.
             sendRegistrationToServer(token);
 
             // Subscribe to topic channels
-            subscribeTopics(token);
+            /*subscribeTopics(token);*/
 
             // You should store a boolean that indicates whether the generated token has been
             // sent to your server. If the boolean is false, send the token to your server,
@@ -59,7 +58,7 @@ public class GigaRegistrationIntentService extends IntentService {
             sharedPreferences.edit().putBoolean(GigaPreferences.SENT_TOKEN_TO_SERVER, true).apply();
             // [END register_for_gcm]
         } catch (Exception e) {
-            Log.d(TAG, "Failed to complete token refresh", e);
+            /*Log.d(TAG, "Failed to complete token refresh", e);*/
             // If an exception happens while fetching the new token or updating our registration data
             // on a third-party server, this ensures that we'll attempt the update at a later time.
             sharedPreferences.edit().putBoolean(GigaPreferences.SENT_TOKEN_TO_SERVER, false).apply();
@@ -89,12 +88,12 @@ public class GigaRegistrationIntentService extends IntentService {
      * @throws IOException if unable to reach the GCM PubSub service
      */
     // [START subscribe_topics]
-    private void subscribeTopics(String token) throws IOException {
+    /*private void subscribeTopics(String token) throws IOException {
         GcmPubSub pubSub = GcmPubSub.getInstance(this);
         for (String topic : TOPICS) {
             pubSub.subscribe(token, "/topics/" + topic, null);
         }
-    }
+    }*/
     // [END subscribe_topics]
 
 }

@@ -1,29 +1,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:padding="8dp" >
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:background="@color/windowBackground"
+              android:gravity="center_vertical"
+              android:padding="8dp"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/dir_item_area"
         android:gravity="center_vertical"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:layout_marginLeft="17dp">
 
         <ImageView
             android:id="@+id/iv_icon"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ico_24dp_folder" />
+            android:src="@drawable/ico_24dp_folder"
+            android:layout_width="20dp"
+            android:layout_height="20dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_vertical"
-            android:paddingLeft="10dp">
+            android:paddingLeft="20dp">
 
             <TextView
                 android:id="@+id/tv_name"
@@ -31,8 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/iv_icon"
                 android:text="name"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textColor="@color/darkGray"
+                android:textSize="14sp"
                 android:ellipsize="end"
                 android:singleLine="true"/>
 
@@ -45,18 +48,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2016.08.25  오후7:16"
-                    android:textColor="@color/lightGray"
-                    android:textSize="14sp"
+                    android:textColor="@color/dirAttrItem"
+                    android:textSize="11sp"
                     android:id="@+id/item_date"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="56KB"
-                    android:textColor="@color/lightGray"
-                    android:textSize="14sp"
-                    android:layout_marginLeft="30dp"
-                    android:id="@+id/item_size"/>
+                    android:textColor="@color/dirAttrItem"
+                    android:textSize="11sp"
+                    android:id="@+id/item_size"
+                    android:gravity="right"
+                    android:paddingRight="30dp"/>
             </LinearLayout>
 
             <TextView

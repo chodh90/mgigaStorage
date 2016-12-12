@@ -30,12 +30,12 @@
                 android:textSize="18sp"
                 android:layout_marginLeft="5dp"
                 android:text="태그편집"
-                android:textColor="#ffffff"
+                android:textColor="@color/darkGray"
                 android:textStyle="bold"
                 android:gravity="center_vertical"
                 android:layout_weight="1"/>
             <ImageView
-                android:src="@drawable/ico_24dp_done_wh"
+                android:src="@drawable/ico_24dp_done"
                 android:id="@+id/btn_confirm"
                 android:layout_marginRight="25dp"
                 android:layout_gravity = "center"
@@ -44,38 +44,47 @@
                 />
         </LinearLayout>
     </android.support.v7.widget.Toolbar>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/toolbar_shadow"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/backGray">
+        android:layout_height="55dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:background="@color/baseColor">
 
         <EditText
             android:layout_width="250dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="18dp"
-            android:id="@+id/input_tag"
-            android:layout_gravity="center_vertical"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="18dp"
+            android:layout_marginRight="25dp"
             android:padding="8dp"
-            android:maxLength="10"
             android:textSize ="15sp"
+            android:maxLength="10"
+            android:id="@+id/input_tag"
+            android:hint="#태그를 입력해주세요. (최대 00개)"
+            android:textColorHint="@color/lightGray"
             android:textColor="@color/darkGray"
-            android:background="@drawable/search_border_style"
+            android:background="@color/baseColor"
             android:gravity="center_vertical" />
         <Button
-            android:id="@+id/tagAdd"
-            android:layout_marginRight="18dp"
-            android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:background="@drawable/tag_button_style"
-            android:layout_gravity="center_vertical"
-            android:textColor="#FF0000"
-            android:textSize="14dp"
+            android:textAllCaps="false"
+            android:layout_width="65dp"
+            android:layout_height="55dp"
+            android:background="@color/baseColor"
+            android:textColor="@color/darkGray"
             android:text="추가"
-            android:layout_weight="1"/>
+            android:textSize="15sp"
+            android:id="@+id/tagAdd"/>
     </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#EDEDED"/>
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -4,34 +4,103 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".DrawerLayoutViewActivity"
     android:layout_width="match_parent"
-    android:layout_height="70dp"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:background="@drawable/gray_under_line"
-    android:gravity="center_vertical"
-    android:layout_marginTop="20dp">
+    android:layout_marginTop="20dp"
+    android:paddingBottom="5dp"
+    android:layout_height="134dp">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ico_24dp_gigastorage"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"/>
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="님의 스토리지"
-        android:textSize="15sp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textStyle="bold"
-        android:layout_weight="1"
-        android:id="@+id/nav_header_title"/>
+        android:gravity="center_vertical"
+        android:layout_marginTop="15dp">
 
-    <ImageView
-        android:id="@+id/setting"
-        android:layout_width="wrap_content"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ico_24dp_kt"
+            android:layout_gravity="center"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="15sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:id="@+id/empty1"/>
+
+        <ImageView
+            android:id="@+id/setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ico_24dp_setting"
+            android:layout_marginRight="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ico_24dp_setting"
-        android:layout_marginRight="10dp"/>
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginRight="10dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ico_24dp_gigastorage"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="홍길동"
+            android:textSize="18sp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textStyle="bold"
+            android:id="@+id/nav_header_title"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4GB/1TB   23%Used"
+                android:textSize="14sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:id="@+id/emptyText"
+                android:textAllCaps="false"
+                android:textColor="#878787"
+                android:layout_marginTop="5dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_marginTop="26dp"
+        android:background="#666666"/>
 </LinearLayout>
