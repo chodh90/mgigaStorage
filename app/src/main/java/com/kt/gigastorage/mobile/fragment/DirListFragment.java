@@ -83,6 +83,7 @@ public class DirListFragment extends Fragment {
     private FoldrBasVO foldrBasVO = new FoldrBasVO();
     private FileBasVO fileBasVO = new FileBasVO();
     private TextView dirNavi = null;
+    private TextView dirUpNavi;
     private FrameLayout frameLayout;
 
     public static Context context;
@@ -93,6 +94,7 @@ public class DirListFragment extends Fragment {
 
     private String myDevUuid; //내 기기uuid
     private String userId;
+    private TextView toolbarTitle;
 
 
     private ArrayList<String> rootFolders = new ArrayList<>();
@@ -132,9 +134,18 @@ public class DirListFragment extends Fragment {
 
         mListView = (SwipeMenuListView) view.findViewById(R.id.sWlistView);
         dirNavi = (TextView) view.findViewById(R.id.dirNavi);
+        dirUpNavi = (TextView) view.findViewById(R.id.dirUpNavi);
         dirNavi.setText(" > " + devNm);
         /*dirNaviList = (LinearLayout)view.findViewById(R.id.dirNaviList);*/
         rootFolderNms.add(dirNavi.getText().toString());
+
+        dirUpNavi.setVisibility(View.GONE);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        float dp = context.getResources().getDisplayMetrics().density;
+        int leftGoneDp = (int)(26 * dp);
+        params.leftMargin = leftGoneDp;
+        dirNavi.setLayoutParams(params);
+
 
         mAdapter = new AppAdapter();
         mListView.setAdapter(mAdapter); // swipeMenuListView에 어댑터 연결
@@ -148,12 +159,24 @@ public class DirListFragment extends Fragment {
         final Toolbar toolbar = (Toolbar) ((DrawerLayoutViewActivity) DrawerLayoutViewActivity.context).findViewById(R.id.toolbar);
         toolbarSort = (ImageView) toolbar.findViewById(R.id.toolbar_sort);
         toolbarSort.setVisibility(View.VISIBLE);
+        toolbarTitle = (TextView) ((DrawerLayoutViewActivity) DrawerLayoutViewActivity.context).findViewById(R.id.toobar_title);
 
         Button temp = (Button)((DrawerLayoutViewActivity) DrawerLayoutViewActivity.context).findViewById(R.id.btn_temp);
         Context wrapper = new ContextThemeWrapper(DrawerLayoutViewActivity.context, R.style.AppTheme_Popup_menu);
 
         final PopupMenu popupMenu = new PopupMenu(wrapper, temp, Gravity.CENTER);
         popupMenu.inflate(R.menu.option_menu);
+
+        toolbarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle args = new Bundle();
+                args.putString("devNm", devNm);
+                args.putString("devUuid", devUuid);
+                args.putString("osCd", osCd);
+                DrawerLayoutViewActivity.activity.changeFragment(args);
+            }
+        });
 
         toolbarSort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -579,6 +602,10 @@ public class DirListFragment extends Fragment {
             @Override
             public void onResponse(Response<JsonObject> response) {
                 if (response.isSuccess()) {
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                    float dp = context.getResources().getDisplayMetrics().density;
+                    int leftGoneDp = (int)(26 * dp);
+                    int leftDp = (int)(0 * dp);
                     Gson gson = new Gson();
                     int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
                     String message = new ResponseFailCode().responseFail(statusCode);
@@ -588,8 +615,11 @@ public class DirListFragment extends Fragment {
                         mListData = new ArrayList<Map<String, String>>();
                         if (tempListData.size() > 0) { // 폴더리스트가 있을 때!
                             if (tempListData.get(0).get("upFoldrId") == null) { //root인경우 다시 웹서비스호출
-
                                 if (tempListData.get(0).get("osCd").equals("W")) {
+                                    dirUpNavi.setVisibility(View.GONE);
+                                    params.leftMargin = leftGoneDp;
+                                    dirNavi.setText("> " + devNm);
+                                    dirNavi.setLayoutParams(params);
                                     mListData.addAll(tempListData);
                                     getFileListWebservice();
                                 } else {
@@ -603,6 +633,14 @@ public class DirListFragment extends Fragment {
                                     Map<String, String> rootMap = new ArrayMap<String, String>();
                                     rootMap.put("foldrNm", "..");
                                     mListData.add(rootMap);
+                                    dirUpNavi.setVisibility(View.VISIBLE);
+                                    params.leftMargin = leftDp;
+                                    dirNavi.setLayoutParams(params);
+                                }else{
+                                    dirUpNavi.setVisibility(View.GONE);
+                                    dirNavi.setText("> " + devNm);
+                                    params.leftMargin = leftGoneDp;
+                                    dirNavi.setLayoutParams(params);
                                 }
 
                                 mListData.addAll(tempListData);
@@ -610,6 +648,9 @@ public class DirListFragment extends Fragment {
                             }
                         } else { // 폴더리스트가 없음
                             if (rootFolders.size() > 0) {
+                                dirUpNavi.setVisibility(View.VISIBLE);
+                                params.leftMargin = leftDp;
+                                dirNavi.setLayoutParams(params);
                                 Map<String, String> rootMap = new ArrayMap<String, String>();
                                 rootMap.put("foldrNm", "..");
                                 mListData.add(rootMap);
@@ -949,19 +990,31 @@ public class DirListFragment extends Fragment {
                                 obj = (Object) itemMap.get("upFoldrId");
                                 if(obj == null) {
                                     rootFolders.add(null); // 해당 폴더의 상위폴더id를 add(PC)
+                                    dirUpNavi.setVisibility(View.GONE);
                                 } else {
                                     rootFolders.add(obj.toString()); // 해당 폴더의 상위폴더id를 add
                                 }
-                                rootFolderNms.add(" > " +itemMap.get("foldrNm"));
+                                rootFolderNms.add(itemMap.get("foldrNm"));
                             }
 
                             obj = mData.get(("foldrNm"));
+                            dirUpNavi.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    foldrBasVO.setFoldrId(rootFolders.get(rootFolders.size()-1));
+                                    fileBasVO.setFoldrId(rootFolders.get(rootFolders.size()-1));
+                                    rootFolders.remove(rootFolders.size()-1); // 마지막 root foldrId 지움
+                                    rootFolderNms.remove(rootFolderNms.size()-1);
+                                    dirNavi.setText(rootFolderNms.get(rootFolders.size()));
+                                    getFoldrListWebservice();
+                                }
+                            });
                             if(obj.equals("..")) {
                                 rootFolders.remove(rootFolders.size()-1); // 마지막 root foldrId 지움
                                 rootFolderNms.remove(rootFolderNms.size()-1);
                                 dirNavi.setText(rootFolderNms.get(rootFolders.size()));
                             } else {
-                                dirNavi.setText(" > " + mData.get(("foldrNm")));
+                                dirNavi.setText(mData.get(("foldrNm")));
                             }
                             getFoldrListWebservice();
                         } else { // 파일

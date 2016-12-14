@@ -51,8 +51,6 @@ public class SendNasViewActivity extends Activity {
         intentFileId = intent.getExtras().getString("fileId");
         intentCommand = intent.getExtras().getString("command");
 
-        FoldrFragment foldrFragment = new FoldrFragment();
-
         findViewById(R.id.btn_confirm).setOnClickListener(selecteConfirm);
         findViewById(R.id.topBack).setOnClickListener(closeActivity);
         dirNavi = (TextView)findViewById(R.id.dirNavi);

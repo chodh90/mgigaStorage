@@ -3,6 +3,7 @@ package com.kt.gigastorage.mobile.service;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Message;
@@ -81,10 +82,12 @@ public class FileDownloadThread extends AsyncTask<String, Integer, String> {
                 encodePath = encodePath.replaceAll("\\+", "%20");
 
                 String adress = "";
+                Resources res = context.getResources();
+                String hostIp = String.format(res.getString(R.string.nasUrl), SharedPreferenceUtil.getSharedPreference(context,"hostIp"));
                 if(params[2] == null || params[2].equals("")){
-                    adress = String.format("%s/gs-%s/%s-gs/%s/%s", context.getString(R.string.nasUrl), userId, userId, encodePath, encodeFile);
+                    adress = String.format("%s/gs-%s/%s-gs/%s/%s", hostIp, userId, userId, encodePath, encodeFile);
                 }else{
-                    adress = String.format("%s/gs-%s/%s/%s/%s", context.getString(R.string.nasUrl), userId, params[2], encodePath, encodeFile);
+                    adress = String.format("%s/gs-%s/%s/%s/%s", hostIp, userId, params[2], encodePath, encodeFile);
                 }
 
 

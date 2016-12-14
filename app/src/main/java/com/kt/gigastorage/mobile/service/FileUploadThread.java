@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Message;
@@ -68,9 +69,10 @@ public class FileUploadThread extends AsyncTask<String, Integer, String> {
     protected String doInBackground(String... params) {
 
         try{
-
+            Resources res = context.getResources();
+            String hostIp = String.format(res.getString(R.string.nasUrl), SharedPreferenceUtil.getSharedPreference(context,"hostIp"));
             HttpURLConnection conn = null;
-            String adress =  String.format("%s/gs-%s/%s-gs/%s?recursive=true", context.getString(R.string.nasUrl),userId, userId, params[0]);
+            String adress =  String.format("%s/gs-%s/%s-gs/%s?recursive=true", hostIp,userId, userId, params[0]);
             URL url = new URL(adress);
             conn = (HttpURLConnection) url.openConnection();
 
@@ -103,8 +105,7 @@ public class FileUploadThread extends AsyncTask<String, Integer, String> {
                     }
                     encodeFile = encodeFile.replaceAll("\\+", "%20");
                     encodePath = encodePath.replaceAll("\\+", "%20");
-
-                    adress =  String.format("%s/gs-%s/%s-gs/%s/%s?overwrite=true", context.getString(R.string.nasUrl),userId, userId, encodePath, encodeFile);
+                    adress =  String.format("%s/gs-%s/%s-gs/%s/%s?overwrite=true", hostIp,userId, userId, encodePath, encodeFile);
 
                     File file = new File(Environment.getExternalStorageDirectory()+"/"+params[3]+"/",fileNm); //params에 filePath 넘겨받음
 

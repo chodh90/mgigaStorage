@@ -28,6 +28,7 @@ import java.util.Arrays;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by araise on 2016-11-01.

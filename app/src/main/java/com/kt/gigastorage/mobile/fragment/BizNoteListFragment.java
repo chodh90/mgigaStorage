@@ -65,6 +65,8 @@ public class BizNoteListFragment extends Fragment {
     private String userId;
     private boolean bookMarkFlag;
     private AlertDialog.Builder alert;
+    private TextView dirUpNavi;
+    private TextView toolbarTitle;
 
     public static Context context;
 
@@ -97,9 +99,17 @@ public class BizNoteListFragment extends Fragment {
 
         swipeStateList = new boolean[0];
 
+        toolbarTitle = (TextView) ((DrawerLayoutViewActivity) DrawerLayoutViewActivity.context).findViewById(R.id.toobar_title);
         mListView = (SwipeMenuListView) view.findViewById(R.id.sWlistView);
         dirNavi = (TextView) view.findViewById(R.id.dirNavi);
-        dirNavi.setText(" > BizNote");
+        dirUpNavi = (TextView) view.findViewById(R.id.dirUpNavi);
+        dirUpNavi.setVisibility(View.GONE);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        float dp = context.getResources().getDisplayMetrics().density;
+        int leftGoneDp = (int)(26 * dp);
+        params.leftMargin = leftGoneDp;
+        dirNavi.setLayoutParams(params);
+        dirNavi.setText("> BizNote");
         rootFolderNms.add(dirNavi.getText().toString());
 
         mAdapter = new AppAdapter();
@@ -112,6 +122,14 @@ public class BizNoteListFragment extends Fragment {
         }else{
             getNoteListWebservice(mNoteListVO);
         }
+
+        toolbarTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle args = new Bundle();
+                DrawerLayoutViewActivity.activity.changeBizFragment("bizNote",args);
+            }
+        });
 
 
         //Toolbar toolbar = (Toolbar) ((DrawerLayoutViewActivity)DrawerLayoutViewActivity.context).findViewById(R.id.toolbar);

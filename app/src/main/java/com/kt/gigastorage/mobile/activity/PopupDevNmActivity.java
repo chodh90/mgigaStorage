@@ -22,6 +22,7 @@ import com.kt.gigastorage.mobile.webservice.impl.RestServiceImpl;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PopupDevNmActivity extends Activity {
 

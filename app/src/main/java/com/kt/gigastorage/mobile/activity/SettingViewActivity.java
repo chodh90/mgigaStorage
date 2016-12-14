@@ -24,6 +24,7 @@ import com.kt.gigastorage.mobile.webservice.impl.RestServiceImpl;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by araise on 2016-10-19.
@@ -123,6 +124,7 @@ public class SettingViewActivity extends Activity {
                     SharedPreferenceUtil.putSharedPreference(mContext, mContext.getString(R.string.userId), "");
                     SharedPreferenceUtil.putSharedPreference(mContext, mContext.getString(R.string.password), "");
                     SharedPreferenceUtil.putSharedPreference(mContext, mContext.getString(R.string.isChecked), false);
+                    SharedPreferenceUtil.putSharedPreference(mContext, mContext.getString(R.string.hostIp), "");
                     DrawerLayoutViewActivity.activity.finish();
                     if(mContext == SettingViewActivity.context){
                         Intent intent = new Intent(context, MainActivity.class);

@@ -9,8 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,6 +35,8 @@ import com.kt.gigastorage.mobile.utils.SharedPreferenceUtil;
 import com.kt.gigastorage.mobile.vo.DevBasVO;
 import com.kt.gigastorage.mobile.webservice.impl.RestServiceImpl;
 
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +46,6 @@ public class MainActivity extends Activity {
     public static Context context;
     public static DrawerLayoutViewActivity activity;
     public static Activity mainActivity;
-    public static Log log;
 
     public static EditText userId;
     public static EditText password;
@@ -57,7 +56,6 @@ public class MainActivity extends Activity {
 
     public static ProgressDialog mProgDlg;
     public static AlertDialog.Builder alert;
-    private Message loginMsg = new Message();
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -275,6 +273,7 @@ public class MainActivity extends Activity {
                         startActivity(intent);
                     }
                 });
+                alert.show();
             }
         });
     }
@@ -288,7 +287,7 @@ public class MainActivity extends Activity {
         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.xAuthToken), "");
         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.cookie), "");
 
-        Call<JsonObject> LoginCall = RestServiceImpl.getInstance(null).login(userId.getText().toString(), password.getText().toString());
+        Call<JsonObject> LoginCall = RestServiceImpl.getInstance("http://222.106.202.147/GIGA_Storage/webservice/rest/").login(userId.getText().toString(), password.getText().toString());
         LoginCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Response<JsonObject> response) {
@@ -299,11 +298,14 @@ public class MainActivity extends Activity {
                 String msg = "";
                 if(responseCode == 200) {
                     int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
+                    Map<String,String> data = gson.fromJson(response.body().get("data"),Map.class);
+                    String hostIp = data.get("hostIp");
                     if(statusCode == 100) {
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.xAuthToken), response.raw().header(getString(R.string.xAuthToken)));
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.userId), userId.getText().toString());
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.password), password.getText().toString());
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.cookie), response.raw().header(getString(R.string.cookie)));
+                        SharedPreferenceUtil.putSharedPreference(context, getString(R.string.hostIp), hostIp);
                         errorMsg.setText("");
                         deviceAuth();
                     }else if(statusCode == 410){
@@ -329,6 +331,7 @@ public class MainActivity extends Activity {
                         startActivity(intent);
                     }
                 });
+                alert.show();
             }
         });
     }

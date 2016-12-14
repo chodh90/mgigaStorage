@@ -1,10 +1,12 @@
 package com.kt.gigastorage.mobile.webservice.impl;
 
 import android.content.Context;
+import android.content.res.Resources;
 
 import com.kt.gigastorage.mobile.activity.MainActivity;
 import com.kt.gigastorage.mobile.activity.R;
 import com.kt.gigastorage.mobile.interceptor.TokenAddInterceptor;
+import com.kt.gigastorage.mobile.utils.SharedPreferenceUtil;
 import com.kt.gigastorage.mobile.webservice.RestService;
 
 import java.security.SecureRandom;
@@ -33,8 +35,11 @@ public class RestServiceImpl {
     private static Context context = MainActivity.context;
 
     public synchronized static RestService getInstance(String baseUrl) {
+        restService = null;
+
         if (baseUrl == null || baseUrl.equals("")) {
-            baseUrl = context.getString(R.string.serverUrl);
+            Resources res = context.getResources();
+            baseUrl = String.format(res.getString(R.string.serverUrl), SharedPreferenceUtil.getSharedPreference(context,"hostIp"));
         }
         if(restService == null){
 
