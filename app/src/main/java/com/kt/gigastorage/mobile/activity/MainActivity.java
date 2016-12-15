@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -244,18 +246,23 @@ public class MainActivity extends Activity {
             @Override
             public void onResponse(Response<JsonObject> response) {
                 Gson gson = new Gson();
-                int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
-                String message = new ResponseFailCode().responseFail(statusCode);
-                if(statusCode == 100){
-                    FileService.syncFoldrInfo();
-                    mProgDlg.dismiss();
-                    Intent intent = new Intent(MainActivity.this, DrawerLayoutViewActivity.class);
-                    startActivity(intent);
-                    finish();
-                }else if(statusCode != 100 && statusCode != 400){
-                    errorMsg.setText(message);
-                }else {
-                    errorMsg.setText("로그인 정보가 올바르지 않습니다.");
+                int responseCode = response.code();
+                if(responseCode == 200) {
+                    int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
+                    String message = new ResponseFailCode().responseFail(statusCode);
+                    if(statusCode == 100){
+                        FileService.syncFoldrInfo();
+                        mProgDlg.dismiss();
+                        Intent intent = new Intent(MainActivity.this, DrawerLayoutViewActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else if(statusCode != 100 && statusCode != 400){
+                        errorMsg.setText(message);
+                    }else {
+                        errorMsg.setText("로그인 정보가 올바르지 않습니다.");
+                    }
+                }else{
+                    errorMsg.setText("서버와의 통신이 원활하지 않습니다.");
                 }
 
             }
