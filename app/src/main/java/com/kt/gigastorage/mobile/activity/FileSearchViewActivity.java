@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -828,35 +829,19 @@ public class FileSearchViewActivity extends Activity {
 
                     if(itemArea.get("fileId") != null) {
                         if(fileShar.equals("N")){
-                            /*AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-                            dialog.setTitle("해당 파일을 실행 하시겠습니까?");*/
+
                             if(itemArea.get("osCd").equals("G")){
-                            /*dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {*/
-                                /*public void onClick(DialogInterface dialog, int which) {*/
+
                                 new FileDownloadThread(mContext).execute(itemArea.get("foldrWholePathNm"),itemArea.get("fileNm"),itemArea.get("devUuid"),"Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
-                            /*    }
-                            });*/
-                                // Cancel 버튼 이벤트
-                            /*dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });*/
 
                             }else if(itemArea.get("devUuid").equals(myDevUuid)){
-                            /*dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {*/
+
                                 FileViewService.viewFile(mContext,itemArea.get("foldrWholePathNm"),itemArea.get("fileNm"));
-                            /*    }
-                            });*/
-                                // Cancel 버튼 이벤트
-                            /*dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                }
-                            });*/
+
                             }else if(itemArea.get("nasSynchYn").equals("Y")){
+
                                 new FileDownloadThread(mContext).execute(itemArea.get("foldrWholePathNm"),itemArea.get("fileNm"),itemArea.get("devUuid"),"Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+
                             }else{
                                 ComndQueueVO comndQueueVO = new ComndQueueVO();
                                 if (itemArea.get("osCd").equals("A")) { // osCd = W, A 분기 처리
@@ -883,7 +868,6 @@ public class FileSearchViewActivity extends Activity {
                                 TimerService.timerStart(itemArea.get("fileNm"),mContext);
                             }
                         }
-                        /*dialog.show();*/
                     }
 
                     return false;
