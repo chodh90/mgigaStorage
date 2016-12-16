@@ -5,6 +5,9 @@ package com.kt.gigastorage.mobile.vo;
  */
 public class FileEmailVO {
 
+    /* 사용자 ID */
+    private String userId;
+
     /* 파일ID */
     private String fileId;
 
@@ -32,6 +35,14 @@ public class FileEmailVO {
     private String newFileId;
 
     private String inOut;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getFileId() {
         return fileId;

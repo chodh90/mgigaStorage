@@ -305,9 +305,9 @@ public class MainActivity extends Activity {
                 String msg = "";
                 if(responseCode == 200) {
                     int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
-                    Map<String,String> data = gson.fromJson(response.body().get("data"),Map.class);
-                    String hostIp = data.get("hostIp");
                     if(statusCode == 100) {
+                        Map<String,String> data = gson.fromJson(response.body().get("data"),Map.class);
+                        String hostIp = data.get("hostIp");
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.xAuthToken), response.raw().header(getString(R.string.xAuthToken)));
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.userId), userId.getText().toString());
                         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.password), password.getText().toString());

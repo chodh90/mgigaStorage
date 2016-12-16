@@ -2,12 +2,16 @@ package com.kt.gigastorage.mobile.activity;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +23,9 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.kt.gigastorage.mobile.fragment.BizNoteListFragment;
+import com.kt.gigastorage.mobile.fragment.DirListFragment;
+import com.kt.gigastorage.mobile.fragment.FoldrFragment;
 import com.kt.gigastorage.mobile.service.KbConverter;
 import com.kt.gigastorage.mobile.utils.DeviceUtil;
 import com.kt.gigastorage.mobile.utils.FileUtil;
@@ -198,20 +205,11 @@ public class NoteFileAttrViewActivity extends Activity{
             }
         });
 
-        firstRelationImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(NoteFileAttrViewActivity.activity, TempActivity.class);
-                intent.putExtra("emailFrom", emailFrom);
-
-                startActivity(intent);
-            }
-        });
-
         btnSameTimeFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(NoteFileAttrViewActivity.activity, TempActivity.class);
+                Intent intent = new Intent(NoteFileAttrViewActivity.activity, BizNoteEmailRefFileViewActivity.class);
+                intent.putExtra("flag", "fileSame");
                 intent.putExtra("userId", userId);
                 intent.putExtra("amdDate", amdDate);
 
@@ -239,37 +237,6 @@ public class NoteFileAttrViewActivity extends Activity{
             }
         });
     }
-
-    /*Button.OnClickListener intentSameTimeFile = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(NoteFileAttrViewActivity.activity, TempActivity.class);
-            intent.putExtra("userId", userId);
-            intent.putExtra("amdDate", amdDate);
-
-            startActivity(intent);
-        }
-    };*/
-
-    /*Button.OnClickListener intentSendFile = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(NoteFileAttrViewActivity.activity, TempActivity.class);
-            intent.putExtra("emailFrom", emailFrom);
-
-            startActivity(intent);
-        }
-    };*/
-
-    /*Button.OnClickListener intentTogetherPerson = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(NoteFileAttrViewActivity.activity, PopupCcActivity.class);
-            intent.putExtra("emailId", emailId);
-
-            startActivity(intent);
-        }
-    };*/
 
     Button.OnClickListener closeActivity = new View.OnClickListener() {
         @Override
@@ -323,6 +290,16 @@ public class NoteFileAttrViewActivity extends Activity{
                                         startActivity(intent);
                                     }
                                 });
+                                firstRelationImg.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        Intent intent = new Intent(NoteFileAttrViewActivity.activity, BizNoteEmailRefFileViewActivity.class);
+                                        intent.putExtra("flag", "emailSame");
+                                        intent.putExtra("emailFrom", fileEmailData.get(0).get("emailFrom").toString());
+
+                                        startActivity(intent);
+                                    }
+                                });
                             }else{
                                 TextView emailTitle = new TextView(NoteFileAttrViewActivity.this);
                                 TextView emailDate = new TextView(NoteFileAttrViewActivity.this);
@@ -363,8 +340,11 @@ public class NoteFileAttrViewActivity extends Activity{
                                 emailImg.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        Intent intent = new Intent(NoteFileAttrViewActivity.activity, TempActivity.class);
-                                        intent.putExtra("emailFrom", emailFrom);
+                                        Object position = view.getId();
+                                        int index = (int)position;
+                                        Intent intent = new Intent(NoteFileAttrViewActivity.activity, BizNoteEmailRefFileViewActivity.class);
+                                        intent.putExtra("flag", "emailSame");
+                                        intent.putExtra("emailFrom", fileEmailData.get(index).get("emailFrom").toString());
 
                                         startActivity(intent);
                                     }

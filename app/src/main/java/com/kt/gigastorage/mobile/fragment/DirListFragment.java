@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -996,6 +998,11 @@ public class DirListFragment extends Fragment {
                             dirNavi.setText(rootFolderNms.get(rootFolders.size()));
                         } else {
                             dirNavi.setText(mData.get(("foldrNm")));
+                            float dp = context.getResources().getDisplayMetrics().density;
+                            int widthDp = (int)(280 * dp);
+                            dirNavi.setWidth(widthDp);
+                            dirNavi.setSingleLine(true);
+                            dirNavi.setEllipsize(TextUtils.TruncateAt.END);
                         }
                         getFoldrListWebservice();
                     } else { // 파일

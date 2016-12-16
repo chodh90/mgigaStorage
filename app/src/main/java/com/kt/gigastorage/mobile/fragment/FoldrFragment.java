@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.kt.gigastorage.mobile.activity.BizNoteEmailRefFileViewActivity;
 import com.kt.gigastorage.mobile.activity.DrawerLayoutViewActivity;
 import com.kt.gigastorage.mobile.activity.FileSearchViewActivity;
 import com.kt.gigastorage.mobile.activity.MainActivity;
 import com.kt.gigastorage.mobile.activity.R;
 import com.kt.gigastorage.mobile.activity.SendNasViewActivity;
+import com.kt.gigastorage.mobile.service.AlertDialogService;
 import com.kt.gigastorage.mobile.service.FileService;
 import com.kt.gigastorage.mobile.service.FileUploadThread;
 import com.kt.gigastorage.mobile.service.ResponseFailCode;
@@ -93,6 +97,8 @@ public class FoldrFragment extends Fragment {
         String foldrId = "";
         if(command.equals("search")){
             flagContext = FileSearchViewActivity.mContext;
+        }else if(command.equals("bizNote")){
+            flagContext = BizNoteEmailRefFileViewActivity.mContext;
         }else{
             flagContext = DrawerLayoutViewActivity.context;
         }

@@ -4,10 +4,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.design.widget.NavigationView;
 import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.kt.gigastorage.mobile.activity.BizNoteEmailRefFileViewActivity;
 import com.kt.gigastorage.mobile.activity.DrawerLayoutViewActivity;
 import com.kt.gigastorage.mobile.activity.MainActivity;
 import com.kt.gigastorage.mobile.activity.R;
@@ -413,7 +417,7 @@ public class FileService {
     }
 
 
-    public static void fileDownloadWebservice(ComndQueueVO comndQueueVO, Context context, String appPlayYn) {
+    public static void fileDownloadWebservice(ComndQueueVO comndQueueVO,Context context,String appPlayYn) {
         appPlay = appPlayYn;
         mContext = context;
         Call<JsonObject> reqFileDownCall = RestServiceImpl.getInstance(null).nasFileDownload(comndQueueVO);
@@ -430,7 +434,9 @@ public class FileService {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();     //닫기
-                                    DrawerLayoutViewActivity.refresh();
+                                    /*if(mContext == DrawerLayoutViewActivity.context){
+                                        DrawerLayoutViewActivity.refresh();
+                                    }*/
                                 }
                             });
                             alert.setMessage("원격지 PC가 오프라인 상태입니다.");
@@ -463,7 +469,7 @@ public class FileService {
         });
     }
 
-    public static void nasFileCopy(FileBasVO fileBasVO, Context context) {
+    public static void nasFileCopy(FileBasVO fileBasVO,Context context) {
         mContext = context;
         Call<JsonObject> nasFileCopyCall = RestServiceImpl.getInstance(null).nasFileCopy(fileBasVO);
         nasFileCopyCall.enqueue(new Callback<JsonObject>() {
@@ -507,7 +513,7 @@ public class FileService {
         });
     }
 
-    public static void nasFileDel(FileBasVO fileBasVO, Context context) {
+    public static void nasFileDel(FileBasVO fileBasVO,Context context) {
         mContext = context;
         Call<JsonObject> nasFileDelCall = RestServiceImpl.getInstance(null).nasFileDel(fileBasVO);
         nasFileDelCall.enqueue(new Callback<JsonObject>() {

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +47,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static com.kt.gigastorage.mobile.activity.R.id.contextIcon;
+import static com.kt.gigastorage.mobile.activity.R.id.end;
 
 /**
  * Created by zeroeun on 2016-10-14.
@@ -99,7 +101,7 @@ public class BizNoteListFragment extends Fragment {
 
         swipeStateList = new boolean[0];
 
-        toolbarTitle = (TextView) ((DrawerLayoutViewActivity) DrawerLayoutViewActivity.context).findViewById(R.id.toobar_title);
+        toolbarTitle = (TextView) ((DrawerLayoutViewActivity)DrawerLayoutViewActivity.context).findViewById(R.id.toobar_title);
         mListView = (SwipeMenuListView) view.findViewById(R.id.sWlistView);
         dirNavi = (TextView) view.findViewById(R.id.dirNavi);
         dirUpNavi = (TextView) view.findViewById(R.id.dirUpNavi);
@@ -213,11 +215,12 @@ public class BizNoteListFragment extends Fragment {
                 mIndex = position;
                 View view = mAdapter.getViewByPosition(position,mListView);
                 ((ImageView)view.findViewById(contextIcon)).setImageResource(R.drawable.ico_36dp_context_open);
+                if(index != -1) {
                     switch (menu.getViewType()) {
                         case 0: // 폴더
                             switch (index) {
                                 case 0: // 북마크 추가
-                                    Object obj = (Object)item.get("noteId");
+                                    Object obj = (Object) item.get("noteId");
                                     noteBmarkVO.setNoteId(obj.toString());
                                     mergNoteBmark(noteBmarkVO);
                                     break;
@@ -226,7 +229,7 @@ public class BizNoteListFragment extends Fragment {
                         case 1: // 파일
                             switch (index) {
                                 case 0: // 속성보기
-                                    DrawerLayoutViewActivity dlv = (DrawerLayoutViewActivity)getActivity();
+                                    DrawerLayoutViewActivity dlv = (DrawerLayoutViewActivity) getActivity();
                                     dlv.intentNoteFileAttrViewActivity(item);
                                     break;
                             }
@@ -234,7 +237,7 @@ public class BizNoteListFragment extends Fragment {
                         case 4: // 북마크 삭제
                             switch (index) {
                                 case 0: // 북마크 삭제
-                                    Object obj = (Object)item.get("noteId");
+                                    Object obj = (Object) item.get("noteId");
                                     noteBmarkVO.setNoteId(obj.toString());
                                     delNoteBmark(noteBmarkVO);
                                     alert.setMessage("북마크가 삭제 되었습니다.");
@@ -251,7 +254,7 @@ public class BizNoteListFragment extends Fragment {
                             }
                             break;
                     }
-
+                }
                 return false;
             }
         });
@@ -735,6 +738,11 @@ public class BizNoteListFragment extends Fragment {
                             mNoteListVO.setNoteId(((Object)mData.get("noteId")).toString());
                             getNoteListWebservice(mNoteListVO);
                             dirNavi.setText("> " + mData.get("noteNm"));
+                            float dp = context.getResources().getDisplayMetrics().density;
+                            int widthDp = (int)(320 * dp);
+                            dirNavi.setWidth(widthDp);
+                            dirNavi.setSingleLine(true);
+                            dirNavi.setEllipsize(TextUtils.TruncateAt.END);
                         }
                     });
                 }
@@ -758,5 +766,4 @@ public class BizNoteListFragment extends Fragment {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 getResources().getDisplayMetrics());
     }
-
 }
