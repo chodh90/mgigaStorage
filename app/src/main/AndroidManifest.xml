@@ -41,7 +41,7 @@
         <activity android:name=".SendNasViewActivity" />
         <activity android:name=".TagEditActivity" />
         <activity android:name=".NoteFileAttrViewActivity" />
-        <activity android:name=".TempActivity"/>
+        <activity android:name=".BizNoteEmailRefFileViewActivity"/>
         <activity android:name=".PopupDevNmActivity"
             android:theme="@android:style/Theme.Dialog"
             android:screenOrientation="portrait">
