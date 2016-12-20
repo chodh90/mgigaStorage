@@ -12,6 +12,7 @@
             android:title="날짜순-오래된 항목 우선" />
 
         <item
+            android:checked="true"
             android:id="@+id/asc_name"
             android:title="이름순-ㄱ우선" />
 

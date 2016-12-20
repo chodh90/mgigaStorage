@@ -294,7 +294,7 @@ public class MainActivity extends Activity {
         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.xAuthToken), "");
         SharedPreferenceUtil.putSharedPreference(context, getString(R.string.cookie), "");
 
-        Call<JsonObject> LoginCall = RestServiceImpl.getInstance("http://222.106.202.147/GIGA_Storage/webservice/rest/").login(userId.getText().toString(), password.getText().toString());
+        Call<JsonObject> LoginCall = RestServiceImpl.getInstance(getString(R.string.loginUrl)).login(userId.getText().toString(), password.getText().toString());
         LoginCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Response<JsonObject> response) {
