@@ -5,6 +5,9 @@ package com.kt.gigastorage.mobile.vo;
  */
 public class NoteListVO {
 
+    /** 사용자 ID **/
+    private String userId;
+
     /** 노트 ID **/
     private String noteId;
 
@@ -37,6 +40,14 @@ public class NoteListVO {
 
     /** 정렬순서 **/
     private String sortOdrg;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getNoteId() {
         return noteId;

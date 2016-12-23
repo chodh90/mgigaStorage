@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArrayMap;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -119,6 +120,8 @@ public class BizNoteListFragment extends Fragment {
 
         mNoteBasVO.setUserId(SharedPreferenceUtil.getSharedPreference(getActivity(),"userId"));
         noteBmarkVO.setUserId(SharedPreferenceUtil.getSharedPreference(getActivity(),"userId"));
+        mNoteListVO.setUserId(SharedPreferenceUtil.getSharedPreference(getActivity(),"userId"));
+
         if(mNoteListVO.getNoteId() == null){
             getNoteMenuListWebservice();
         }else{
@@ -215,45 +218,50 @@ public class BizNoteListFragment extends Fragment {
                 mIndex = position;
                 View view = mAdapter.getViewByPosition(position,mListView);
                 ((ImageView)view.findViewById(contextIcon)).setImageResource(R.drawable.ico_36dp_context_open);
-                if(index != -1) {
-                    switch (menu.getViewType()) {
-                        case 0: // 폴더
-                            switch (index) {
-                                case 0: // 북마크 추가
-                                    Object obj = (Object) item.get("noteId");
-                                    noteBmarkVO.setNoteId(obj.toString());
-                                    mergNoteBmark(noteBmarkVO);
-                                    break;
-                            }
-                            break;
-                        case 1: // 파일
-                            switch (index) {
-                                case 0: // 속성보기
-                                    DrawerLayoutViewActivity dlv = (DrawerLayoutViewActivity) getActivity();
-                                    dlv.intentNoteFileAttrViewActivity(item);
-                                    break;
-                            }
-                            break;
-                        case 4: // 북마크 삭제
-                            switch (index) {
-                                case 0: // 북마크 삭제
-                                    Object obj = (Object) item.get("noteId");
-                                    noteBmarkVO.setNoteId(obj.toString());
-                                    delNoteBmark(noteBmarkVO);
-                                    alert.setMessage("북마크가 삭제 되었습니다.");
-                                    alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();     //닫기
-                                            mListData.remove(mIndex);
-                                            mAdapter.notifyDataSetChanged();
-                                        }
-                                    });
-                                    alert.show();
-                                    break;
-                            }
-                            break;
+                try {
+                    if (index != -1) {
+                        switch (menu.getViewType()) {
+                            case 0: // 폴더
+                                switch (index) {
+                                    case 0: // 북마크 추가
+                                        Object obj = (Object) item.get("noteId");
+                                        noteBmarkVO.setNoteId(obj.toString());
+                                        mergNoteBmark(noteBmarkVO);
+                                        break;
+                                }
+                                break;
+                            case 1: // 파일
+                                switch (index) {
+                                    case 0: // 속성보기
+                                        DrawerLayoutViewActivity dlv = (DrawerLayoutViewActivity) getActivity();
+                                        dlv.intentNoteFileAttrViewActivity(item);
+                                        break;
+                                }
+                                break;
+                            case 4: // 북마크 삭제
+                                switch (index) {
+                                    case 0: // 북마크 삭제
+                                        Object obj = (Object) item.get("noteId");
+                                        noteBmarkVO.setNoteId(obj.toString());
+                                        delNoteBmark(noteBmarkVO);
+                                        alert.setMessage("북마크가 삭제 되었습니다.");
+                                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();     //닫기
+                                                mListData.remove(mIndex);
+                                                mAdapter.notifyDataSetChanged();
+                                            }
+                                        });
+                                        alert.show();
+                                        break;
+                                }
+                                break;
+                        }
                     }
+                    return false;
+                }catch (Exception e){
+
                 }
                 return false;
             }
@@ -530,8 +538,57 @@ public class BizNoteListFragment extends Fragment {
 
     public void getNoteListWebservice(NoteListVO mNoteListVO) {
 
-        Call<JsonObject> lisfFileCall = RestServiceImpl.getInstance(null).listNote(mNoteListVO);
-        lisfFileCall.enqueue(new Callback<JsonObject>() {
+        Call<JsonObject> listFileCall = RestServiceImpl.getInstance(null).listNote(mNoteListVO);
+        listFileCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Response<JsonObject> response) {
+                if(response.isSuccess()) {
+                    Gson gson = new Gson();
+                    int statusCode = gson.fromJson(response.body().get("statusCode"), Integer.class);
+                    String message = new ResponseFailCode().responseFail(statusCode);
+                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    if(statusCode == 100){
+                        mListData = new ArrayList<Map<String, String>>();
+                        Map<String, String> rootMap = new ArrayMap<String, String>();
+                        rootMap.put("noteNm", "..");
+                        mListData.add(rootMap);
+                        mListData.addAll(gson.fromJson(response.body().get("listData"), List.class));
+                        mAdapter.notifyDataSetChanged();
+                        swipeStateList = new boolean[mListData.size()];
+                    }else if(statusCode != 100 && statusCode != 400){
+                        alert.setMessage(message);
+                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();     //닫기
+                            }
+                        });
+                        alert.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setMessage(context.getString(R.string.serverOut));
+                alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();     //닫기
+                        Intent intent = new Intent(context, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+    }
+
+    public void listBmarkFile(NoteBmarkVO noteBmarkVO) {
+
+        Call<JsonObject> listNoteBmarkFileCall = RestServiceImpl.getInstance(null).listNoteBmarkFile(noteBmarkVO);
+        listNoteBmarkFileCall.enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Response<JsonObject> response) {
                 if(response.isSuccess()) {
@@ -625,7 +682,16 @@ public class BizNoteListFragment extends Fragment {
         // 현재 아이템의 object를 리턴
         @Override
         public Map<String,String> getItem(int position) {
-            return mListData.get(position);
+            try{
+                if(position != -1){
+                    return mListData.get(position);
+                }else{
+                    throw new Exception();
+                }
+            }catch (Exception e){
+                Log.d("/////////////////에러:","index 에러");
+            }
+            return mListData.get(0);
         }
 
         // 아이템 포지션의 id값 리턴
@@ -673,91 +739,100 @@ public class BizNoteListFragment extends Fragment {
         // 출력될 아이템 관리
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+            try {
+                // 리스트가 길 때, 화면에 보이지 않는 아이템은 convertView가 null인 상태임(고로 여기를 탐)
+                if (convertView == null) {
+                    convertView = View.inflate(getActivity(),
+                            R.layout.item_list_dir_search, null);
+                    new AppAdapter.ViewHolder(convertView);
+                }
 
-            // 리스트가 길 때, 화면에 보이지 않는 아이템은 convertView가 null인 상태임(고로 여기를 탐)
-            if (convertView == null) {
-                convertView = View.inflate(getActivity(),
-                        R.layout.item_list_dir_search, null);
-                new AppAdapter.ViewHolder(convertView);
-            }
+                final AppAdapter.ViewHolder holder = (AppAdapter.ViewHolder) convertView.getTag();
 
-            final AppAdapter.ViewHolder holder = (AppAdapter.ViewHolder) convertView.getTag();
+                final Map<String, String> mData = getItem(position);
 
-            final Map<String,String> mData = getItem(position);
+                holder.contextIcon.setImageResource(R.drawable.ico_36dp_context_open);
 
-            holder.contextIcon.setImageResource(R.drawable.ico_36dp_context_open);
+                if (mData.get("fileId") == null) {
 
-            if(mData.get("fileId") == null) {
+                    holder.iv_icon.setImageResource(R.drawable.ico_36dp_folder);
+                    holder.tv_name.setText(mData.get("noteNm"));
+                    if (mData.get("noteNm").equals("..")) {
+                        holder.additionArea.setVisibility(View.GONE);
+                        holder.contextIcon.setVisibility(View.GONE);
+                    } else if (mData.get("noteNm").equals("책갈피")) {
+                        holder.additionArea.setVisibility(View.GONE);
+                        holder.contextIcon.setVisibility(View.GONE);
+                    } else {
+                        holder.additionArea.setVisibility(View.VISIBLE);
+                        holder.contextIcon.setVisibility(View.VISIBLE);
+                    }
+                    Object obj = mData.get("noteId");
 
-                holder.iv_icon.setImageResource(R.drawable.ico_36dp_folder);
-                holder.tv_name.setText(mData.get("noteNm"));
-                if(mData.get("noteNm").equals("..")){
-                    holder.additionArea.setVisibility(View.GONE);
-                    holder.contextIcon.setVisibility(View.GONE);
-                }else if(mData.get("noteNm").equals("책갈피")){
-                    holder.additionArea.setVisibility(View.GONE);
-                    holder.contextIcon.setVisibility(View.GONE);
-                }else{
+                    if (obj == null && !mData.get("noteNm").equals("책갈피")) {
+                        convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                if (bookMarkFlag == false) {
+                                    getNoteMenuListWebservice();
+                                } else if (dirNavi.getText().equals("> 책갈피")) {
+                                    getNoteMenuListWebservice();
+                                } else {
+                                    getNoteBmarkListWebservice(noteBmarkVO);
+                                }
+
+                            }
+                        });
+                    } else if (mData.get("noteNm").equals("책갈피")) {
+                        convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                if (mData.get("noteNm").equals("..")) {
+                                    getNoteMenuListWebservice();
+                                } else {
+                                    getNoteBmarkListWebservice(noteBmarkVO);
+                                }
+                            }
+                        });
+                    } else {
+                        convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                Map<String, String> itemMap = getItem(position);
+                                if(bookMarkFlag == true) {
+                                    noteBmarkVO.setNoteId(((Object) itemMap.get("noteId")).toString());
+                                    listBmarkFile(noteBmarkVO);
+                                }else{
+                                    mNoteListVO.setNoteId(((Object) itemMap.get("noteId")).toString());
+                                    getNoteListWebservice(mNoteListVO);
+                                }
+                                dirNavi.setText("> " + itemMap.get("noteNm"));
+                                float dp = context.getResources().getDisplayMetrics().density;
+                                int widthDp = (int) (320 * dp);
+                                dirNavi.setWidth(widthDp);
+                                dirNavi.setSingleLine(true);
+                                dirNavi.setEllipsize(TextUtils.TruncateAt.END);
+                            }
+                        });
+                    }
+                } else {
                     holder.additionArea.setVisibility(View.VISIBLE);
                     holder.contextIcon.setVisibility(View.VISIBLE);
+                    String etsionNm = mData.get("etsionNm");
+                    int resourceInt = FileUtil.getIconByEtsion(etsionNm);
+                    holder.iv_icon.setImageResource(resourceInt);
+                    holder.tv_name.setText(mData.get("fileNm"));
+                    holder.cretDate.setText(mData.get("cretDate"));
+                    holder.devNm.setText(mData.get("devNm"));
+                    Object obj = mData.get("fileId");
                 }
-                Object obj = mData.get("noteId");
 
-                if(obj == null && !mData.get("noteNm").equals("책갈피")) {
-                    convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            if(bookMarkFlag == false){
-                                getNoteMenuListWebservice();
-                            }else if(dirNavi.getText().equals("> 책갈피")){
-                                getNoteMenuListWebservice();
-                            }else{
-                                getNoteBmarkListWebservice(noteBmarkVO);
-                            }
-
-                        }
-                    });
-                }else if(mData.get("noteNm").equals("책갈피")){
-                    convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if(mData.get("noteNm").equals("..")){
-                                getNoteMenuListWebservice();
-                            }else{
-                                getNoteBmarkListWebservice(noteBmarkVO);
-                            }
-                        }
-                    });
-                }else {
-                    convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            Map<String,String> itemMap = getItem(position);
-                            mNoteListVO.setNoteId(((Object)mData.get("noteId")).toString());
-                            getNoteListWebservice(mNoteListVO);
-                            dirNavi.setText("> " + mData.get("noteNm"));
-                            float dp = context.getResources().getDisplayMetrics().density;
-                            int widthDp = (int)(320 * dp);
-                            dirNavi.setWidth(widthDp);
-                            dirNavi.setSingleLine(true);
-                            dirNavi.setEllipsize(TextUtils.TruncateAt.END);
-                        }
-                    });
-                }
-            } else {
-                holder.additionArea.setVisibility(View.VISIBLE);
-                holder.contextIcon.setVisibility(View.VISIBLE);
-                String etsionNm = mData.get("etsionNm");
-                int resourceInt = FileUtil.getIconByEtsion(etsionNm);
-                holder.iv_icon.setImageResource(resourceInt);
-                holder.tv_name.setText(mData.get("fileNm"));
-                holder.cretDate.setText(mData.get("cretDate"));
-                holder.devNm.setText(mData.get("devNm"));
-                Object obj = mData.get("fileId");
+                return convertView;
+            } catch (Exception e) {
+                Log.d("////////////에러", "Error");
             }
-
             return convertView;
         }
     }

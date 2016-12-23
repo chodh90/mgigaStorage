@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -271,137 +272,142 @@ public class BizNoteEmailRefFileViewActivity extends Activity {
 
                 View view = mAdapter.getViewByPosition(position,mListView);
                 ((ImageView)view.findViewById(contextIcon)).setImageResource(R.drawable.ico_36dp_context_open);
-                if(index != -1){
-                    switch (menu.getViewType()) {
+                try {
+                    if (index != -1) {
+                        switch (menu.getViewType()) {
 
-                        case 0: // 폴더
-                            break;
-                        case 1: // 접속기기 파일
-                            switch (index) {
-                                case 0: // 파일속성
-                                    intentFileAttrViewActivity(item);
-                                    break;
-                                case 1: // 앱 실행
-                                    FileViewService.viewFile(mContext,item.get("foldrWholePathNm"),item.get("fileNm"));
-                                    break;
-                                case 2: //GIGA NAS로 내보내기
-                                    ((DrawerLayoutViewActivity)context).intentToActivity(item,item.get("osCd"),devUuid,command);
-                                    break;
-                                case 3: //파일 삭제
-                                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                                    dialog.setTitle("해당 파일을 삭제 하시겠습니까?");
-                                    dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            mProgDlg.setMessage("파일 삭제중입니다...");
-                                            mProgDlg.show();
-                                            FileUtil.removeFile(item.get("foldrWholePathNm"),item.get("fileNm"));
-                                            FileService.syncFoldrInfo();
-                                            mProgDlg.dismiss();
-                                            alert.setMessage("파일 삭제가 완료 되었습니다.");
-                                            alert.show();
-                                            if(flag.equals("fileSame")){
-                                                getlistFileSame(fileBasVO);
-                                            }else{
-                                                getlistSendEmailSame(fileEmailVO);
-                                            }
-
-                                        }
-                                    });
-                                    // Cancel 버튼 이벤트
-                                    dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                                    dialog.show();
-                                    break;
-                            }
-                            break;
-                        case 2: // 접속기기 외 PC 파일
-                            switch (index) {
-                                case 0: // 파일속성
-                                    intentFileAttrViewActivity(item);
-                                    break;
-                                case 1: // 다운로드
-                                    if (item.get("nasSynchYn").equals("Y")) {
-                                        new FileDownloadThread(mContext).execute(item.get("foldrWholePathNm"), item.get("fileNm"), item.get("devUuid"),"N"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                            case 0: // 폴더
+                                break;
+                            case 1: // 접속기기 파일
+                                switch (index) {
+                                    case 0: // 파일속성
+                                        intentFileAttrViewActivity(item);
                                         break;
-                                    } else {
-                                        ComndQueueVO comndQueueVO = new ComndQueueVO();
-                                        if (item.get("osCd").equals("A")) { // osCd = W, A 분기 처리
-                                            comndQueueVO.setComnd("RALA");
-                                            comndQueueVO.setFromOsCd("A");
-                                        }
-                                        if (item.get("osCd").equals("W")) {
-                                            comndQueueVO.setComnd("RWLA");
-                                            comndQueueVO.setFromOsCd("W");
-                                        }
-                                        comndQueueVO.setFromUserId(userId);
-                                        comndQueueVO.setFromFoldr(item.get("foldrWholePathNm"));
-                                        comndQueueVO.setFromFileNm(item.get("fileNm"));
-                                        Object objFileId = item.get("fileId");
-                                        comndQueueVO.setFromFileId(objFileId.toString());
-                                        comndQueueVO.setFromDevUuid(devUuid);
-                                        comndQueueVO.setToFoldr("/Mobile");
-                                        comndQueueVO.setToOsCd("A");
-                                        comndQueueVO.setToDevUuid(myDevUuid);
-                                        comndQueueVO.setComndOsCd("A");
-                                        comndQueueVO.setComndDevUuid(myDevUuid);
-
-                                        FileService.fileDownloadWebservice(comndQueueVO,mContext,"N");
+                                    case 1: // 앱 실행
+                                        FileViewService.viewFile(mContext, item.get("foldrWholePathNm"), item.get("fileNm"));
                                         break;
-                                    }
-                                case 2: // GigaNas로 내보내기
-                                    ((DrawerLayoutViewActivity)context).intentToActivity(item, item.get("osCd"), devUuid,command);
-                                    break;
-                            }
+                                    case 2: //GIGA NAS로 내보내기
+                                        ((DrawerLayoutViewActivity) context).intentToActivity(item, item.get("osCd"), devUuid, command);
+                                        break;
+                                    case 3: //파일 삭제
+                                        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                                        dialog.setTitle("해당 파일을 삭제 하시겠습니까?");
+                                        dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                mProgDlg.setMessage("파일 삭제중입니다...");
+                                                mProgDlg.show();
+                                                FileUtil.removeFile(item.get("foldrWholePathNm"), item.get("fileNm"));
+                                                FileService.syncFoldrInfo();
+                                                mProgDlg.dismiss();
+                                                alert.setMessage("파일 삭제가 완료 되었습니다.");
+                                                alert.show();
+                                                if (flag.equals("fileSame")) {
+                                                    getlistFileSame(fileBasVO);
+                                                } else {
+                                                    getlistSendEmailSame(fileEmailVO);
+                                                }
 
-                            break;
-                        case 3: // NAS 파일
-                            switch (index) {
-                                case 0: // 파일속성
-                                    intentFileAttrViewActivity(item);
-                                    break;
-                                case 1: // 다운로드
-                                    new FileDownloadThread(mContext).execute(item.get("foldrWholePathNm"),item.get("fileNm"),"","N"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
-                                    break;
-                                case 2: //GIGA NAS로 내보내기
-                                    ((DrawerLayoutViewActivity)context).intentToActivity(item, item.get("osCd"), devUuid,command);
-                                    break;
-                                case 3:
-                                    AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-                                    dialog.setTitle("해당 파일을 삭제 하시겠습니까?");
-                                    dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            mProgDlg.setMessage("파일 삭제중입니다...");
-                                            mProgDlg.show();
-                                            fileBasVO.setUserId(userId);
-                                            fileBasVO.setDevUuid(myDevUuid);
-                                            fileBasVO.setFoldrWholePathNm(item.get("foldrWholePathNm"));
-                                            fileBasVO.setFileNm(item.get("fileNm"));
-                                            Object fileIdObj = item.get("fileId");
-                                            fileBasVO.setFileId(fileIdObj.toString());
-                                            FileService.nasFileDel(fileBasVO,mContext);
-                                            FileService.syncFoldrInfo();
-                                            mProgDlg.dismiss();
-                                            if(flag.equals("fileSame")){
-                                                getlistFileSame(fileBasVO);
-                                            }else{
-                                                getlistSendEmailSame(fileEmailVO);
                                             }
-                                        }
-                                    });
-                                    dialog.setNegativeButton("취소",new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                                    dialog.show();
-                                    break;
-                            }
-                            break;
+                                        });
+                                        // Cancel 버튼 이벤트
+                                        dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                                        dialog.show();
+                                        break;
+                                }
+                                break;
+                            case 2: // 접속기기 외 PC 파일
+                                switch (index) {
+                                    case 0: // 파일속성
+                                        intentFileAttrViewActivity(item);
+                                        break;
+                                    case 1: // 다운로드
+                                        if (item.get("nasSynchYn").equals("Y")) {
+                                            new FileDownloadThread(mContext).execute(item.get("foldrWholePathNm"), item.get("fileNm"), item.get("devUuid"), "N"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                                            break;
+                                        } else {
+                                            ComndQueueVO comndQueueVO = new ComndQueueVO();
+                                            if (item.get("osCd").equals("A")) { // osCd = W, A 분기 처리
+                                                comndQueueVO.setComnd("RALA");
+                                                comndQueueVO.setFromOsCd("A");
+                                            }
+                                            if (item.get("osCd").equals("W")) {
+                                                comndQueueVO.setComnd("RWLA");
+                                                comndQueueVO.setFromOsCd("W");
+                                            }
+                                            comndQueueVO.setFromUserId(userId);
+                                            comndQueueVO.setFromFoldr(item.get("foldrWholePathNm"));
+                                            comndQueueVO.setFromFileNm(item.get("fileNm"));
+                                            Object objFileId = item.get("fileId");
+                                            comndQueueVO.setFromFileId(objFileId.toString());
+                                            comndQueueVO.setFromDevUuid(devUuid);
+                                            comndQueueVO.setToFoldr("/Mobile");
+                                            comndQueueVO.setToOsCd("A");
+                                            comndQueueVO.setToDevUuid(myDevUuid);
+                                            comndQueueVO.setComndOsCd("A");
+                                            comndQueueVO.setComndDevUuid(myDevUuid);
 
+                                            FileService.fileDownloadWebservice(comndQueueVO, mContext, "N");
+                                            break;
+                                        }
+                                    case 2: // GigaNas로 내보내기
+                                        ((DrawerLayoutViewActivity) context).intentToActivity(item, item.get("osCd"), devUuid, command);
+                                        break;
+                                }
+
+                                break;
+                            case 3: // NAS 파일
+                                switch (index) {
+                                    case 0: // 파일속성
+                                        intentFileAttrViewActivity(item);
+                                        break;
+                                    case 1: // 다운로드
+                                        new FileDownloadThread(mContext).execute(item.get("foldrWholePathNm"), item.get("fileNm"), "", "N"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                                        break;
+                                    case 2: //GIGA NAS로 내보내기
+                                        ((DrawerLayoutViewActivity) context).intentToActivity(item, item.get("osCd"), devUuid, command);
+                                        break;
+                                    case 3:
+                                        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+                                        dialog.setTitle("해당 파일을 삭제 하시겠습니까?");
+                                        dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                mProgDlg.setMessage("파일 삭제중입니다...");
+                                                mProgDlg.show();
+                                                fileBasVO.setUserId(userId);
+                                                fileBasVO.setDevUuid(myDevUuid);
+                                                fileBasVO.setFoldrWholePathNm(item.get("foldrWholePathNm"));
+                                                fileBasVO.setFileNm(item.get("fileNm"));
+                                                Object fileIdObj = item.get("fileId");
+                                                fileBasVO.setFileId(fileIdObj.toString());
+                                                FileService.nasFileDel(fileBasVO, mContext);
+                                                FileService.syncFoldrInfo();
+                                                mProgDlg.dismiss();
+                                                if (flag.equals("fileSame")) {
+                                                    getlistFileSame(fileBasVO);
+                                                } else {
+                                                    getlistSendEmailSame(fileEmailVO);
+                                                }
+                                            }
+                                        });
+                                        dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                                        dialog.show();
+                                        break;
+                                }
+                                break;
+
+                        }
                     }
+                    return false;
+                }catch (Exception e){
+
                 }
                 return false;
             }
@@ -650,7 +656,16 @@ public class BizNoteEmailRefFileViewActivity extends Activity {
         // 현재 아이템의 object를 리턴
         @Override
         public Map<String,String> getItem(int position) {
-            return mListData.get(position);
+            try{
+                if(position != -1){
+                    return mListData.get(position);
+                }else{
+                    throw new Exception();
+                }
+            }catch (Exception e){
+                Log.d("/////////////////에러:","index 에러");
+            }
+            return mListData.get(0);
         }
 
         // 아이템 포지션의 id값 리턴
@@ -685,53 +700,53 @@ public class BizNoteEmailRefFileViewActivity extends Activity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
+            try {
+                if (convertView == null) {
+                    convertView = View.inflate(mContext,
+                            R.layout.item_list_dir_search, null);
+                    new BizNoteEmailRefFileViewActivity.AppAdapter.ViewHolder(convertView);
+                }
 
-            if (convertView == null) {
-                convertView = View.inflate(mContext,
-                        R.layout.item_list_dir_search, null);
-                new BizNoteEmailRefFileViewActivity.AppAdapter.ViewHolder(convertView);
-            }
+                BizNoteEmailRefFileViewActivity.AppAdapter.ViewHolder holder = (BizNoteEmailRefFileViewActivity.AppAdapter.ViewHolder) convertView.getTag();
+                final Map<String, String> mData = getItem(position);
 
-            BizNoteEmailRefFileViewActivity.AppAdapter.ViewHolder holder = (BizNoteEmailRefFileViewActivity.AppAdapter.ViewHolder) convertView.getTag();
-            final Map<String,String> mData = getItem(position);
+                holder.contextIcon.setImageResource(R.drawable.ico_36dp_context_open);
 
-            holder.contextIcon.setImageResource(R.drawable.ico_36dp_context_open);
+                Object obj = new Object();
+                String etsionNm = mData.get("etsionNm");
+                int resourceInt = FileUtil.getIconByEtsion(etsionNm);
+                holder.iv_icon.setImageResource(resourceInt); // icon
+                holder.tv_name.setText(mData.get("fileNm")); // name
 
-            Object obj = new Object();
-            String etsionNm = mData.get("etsionNm");
-            int resourceInt = FileUtil.getIconByEtsion(etsionNm);
-            holder.iv_icon.setImageResource(resourceInt); // icon
-            holder.tv_name.setText(mData.get("fileNm")); // name
-
-            obj = (Object) mData.get("fileSize");
-            holder.devNm.setText(mData.get("devNm"));
-            holder.contextIcon.setVisibility(View.VISIBLE);
-
-
-            holder.cretDate.setVisibility(View.VISIBLE);
-            holder.cretDate.setText(mData.get("cretDate"));
+                obj = (Object) mData.get("fileSize");
+                holder.devNm.setText(mData.get("devNm"));
+                holder.contextIcon.setVisibility(View.VISIBLE);
 
 
-            convertView.findViewById(R.id.dir_item_area).setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    itemArea = getItem(position);
+                holder.cretDate.setVisibility(View.VISIBLE);
+                holder.cretDate.setText(mData.get("cretDate"));
 
-                    if(itemArea.get("fileId") != null) {
 
-                            if(itemArea.get("osCd").equals("G")){
+                convertView.findViewById(R.id.dir_item_area).setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        itemArea = getItem(position);
 
-                                new FileDownloadThread(mContext).execute(itemArea.get("foldrWholePathNm"),itemArea.get("fileNm"),itemArea.get("devUuid"),"Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                        if (itemArea.get("fileId") != null) {
 
-                            }else if(itemArea.get("devUuid").equals(myDevUuid)){
+                            if (itemArea.get("osCd").equals("G")) {
 
-                                FileViewService.viewFile(mContext,itemArea.get("foldrWholePathNm"),itemArea.get("fileNm"));
+                                new FileDownloadThread(mContext).execute(itemArea.get("foldrWholePathNm"), itemArea.get("fileNm"), itemArea.get("devUuid"), "Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
 
-                            }else if(itemArea.get("nasSynchYn").equals("Y")){
+                            } else if (itemArea.get("devUuid").equals(myDevUuid)) {
 
-                                new FileDownloadThread(mContext).execute(itemArea.get("foldrWholePathNm"),itemArea.get("fileNm"),itemArea.get("devUuid"),"Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                                FileViewService.viewFile(mContext, itemArea.get("foldrWholePathNm"), itemArea.get("fileNm"));
 
-                            }else{
+                            } else if (itemArea.get("nasSynchYn").equals("Y")) {
+
+                                new FileDownloadThread(mContext).execute(itemArea.get("foldrWholePathNm"), itemArea.get("fileNm"), itemArea.get("devUuid"), "Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+
+                            } else {
                                 ComndQueueVO comndQueueVO = new ComndQueueVO();
                                 if (itemArea.get("osCd").equals("A")) { // osCd = W, A 분기 처리
                                     comndQueueVO.setComnd("RALA");
@@ -753,23 +768,27 @@ public class BizNoteEmailRefFileViewActivity extends Activity {
                                 comndQueueVO.setComndOsCd("A");
                                 comndQueueVO.setComndDevUuid(myDevUuid);
 
-                                FileService.fileDownloadWebservice(comndQueueVO,mContext,"Y");
-                                TimerService.timerStart(itemArea.get("fileNm"),mContext);
+                                FileService.fileDownloadWebservice(comndQueueVO, mContext, "Y");
+                                TimerService.timerStart(itemArea.get("fileNm"), mContext);
                             }
                         }
 
-                    return false;
-                }
-            });
+                        return false;
+                    }
+                });
 
-            convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
+                convertView.findViewById(R.id.dir_item_area).setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    //open
-                }
-            });
+                    @Override
+                    public void onClick(View v) {
+                        //open
+                    }
+                });
 
+                return convertView;
+            }catch (Exception e){
+                Log.d("/////////////에러 : ","Error");
+            }
             return convertView;
         }
     }
