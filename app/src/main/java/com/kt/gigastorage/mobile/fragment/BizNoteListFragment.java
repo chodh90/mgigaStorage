@@ -31,9 +31,16 @@ import com.kt.gigastorage.mobile.activity.DrawerLayoutViewActivity;
 import com.kt.gigastorage.mobile.activity.MainActivity;
 import com.kt.gigastorage.mobile.activity.R;
 import com.kt.gigastorage.mobile.service.AlertDialogService;
+import com.kt.gigastorage.mobile.service.FileDownloadThread;
+import com.kt.gigastorage.mobile.service.FileService;
+import com.kt.gigastorage.mobile.service.FileViewService;
 import com.kt.gigastorage.mobile.service.ResponseFailCode;
+import com.kt.gigastorage.mobile.service.TimerService;
+import com.kt.gigastorage.mobile.utils.DeviceUtil;
 import com.kt.gigastorage.mobile.utils.FileUtil;
 import com.kt.gigastorage.mobile.utils.SharedPreferenceUtil;
+import com.kt.gigastorage.mobile.vo.ComndQueueVO;
+import com.kt.gigastorage.mobile.vo.FileBasVO;
 import com.kt.gigastorage.mobile.vo.NoteBasVO;
 import com.kt.gigastorage.mobile.vo.NoteBmarkVO;
 import com.kt.gigastorage.mobile.vo.NoteListVO;
@@ -78,6 +85,8 @@ public class BizNoteListFragment extends Fragment {
     private Map<String, String> item;
     private SwipeMenu swipeMenu;
     private int mIndex;
+    private String myDevUuid;
+    private Map<String, String> itemArea;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +107,7 @@ public class BizNoteListFragment extends Fragment {
         userId = SharedPreferenceUtil.getSharedPreference(context,"userId");
         bookMarkFlag = false;
         alert = AlertDialogService.alert(context);
+        myDevUuid = DeviceUtil.getDevicesUUID(context);
 
 
         swipeStateList = new boolean[0];
@@ -146,6 +156,9 @@ public class BizNoteListFragment extends Fragment {
             @Override
             public void create(SwipeMenu menu) {
 
+                SwipeMenuItem downloadItem = new SwipeMenuItem(getActivity());
+                SwipeMenuItem gigaNasItem = new SwipeMenuItem(getActivity());
+                SwipeMenuItem appPlayItem = new SwipeMenuItem(getActivity());
                 SwipeMenuItem detailItem = new SwipeMenuItem(getActivity());
                 SwipeMenuItem bMarkItem = new SwipeMenuItem(getActivity());
                 SwipeMenuItem blankItem = new SwipeMenuItem(getActivity());
@@ -167,7 +180,7 @@ public class BizNoteListFragment extends Fragment {
                         menu.addMenuItem(bMarkItem);
                         menu.addMenuItem(blankItem);
                         break;
-                    case 1: //파일
+                    case 1: //내 디바이스 파일
                         detailItem = new SwipeMenuItem(getActivity());
                         detailItem.setBackground(R.color.baseColor);
                         detailItem.setWidth(dp2px(80));
@@ -176,11 +189,29 @@ public class BizNoteListFragment extends Fragment {
                         detailItem.setTitleSize(12);
                         detailItem.setTitleColor(R.color.darkGray);
 
+                        appPlayItem = new SwipeMenuItem(getActivity());
+                        appPlayItem.setBackground(R.color.baseColor);
+                        appPlayItem.setWidth(dp2px(80));
+                        appPlayItem.setIcon(R.drawable.ico_18dp_contextmenu_app);
+                        appPlayItem.setTitle("앱 실행");
+                        appPlayItem.setTitleSize(12);
+                        appPlayItem.setTitleColor(R.color.darkGray);
+
+                        gigaNasItem = new SwipeMenuItem(getActivity());
+                        gigaNasItem.setBackground(R.color.baseColor);
+                        gigaNasItem.setWidth(dp2px(80));
+                        gigaNasItem.setIcon(R.drawable.ico_18dp_contextmenu_send);
+                        gigaNasItem.setTitle("GiGA NAS로\n 보내기");
+                        gigaNasItem.setTitleSize(10);
+                        gigaNasItem.setTitleColor(R.color.darkGray);
+
                         blankItem = new SwipeMenuItem(getActivity());
                         blankItem.setBackground(R.color.baseColor);
-                        blankItem.setWidth(dp2px(235));
+                        blankItem.setWidth(dp2px(75));
 
                         menu.addMenuItem(detailItem);
+                        menu.addMenuItem(appPlayItem);
+                        menu.addMenuItem(gigaNasItem);
                         menu.addMenuItem(blankItem);
                         break;
                     case 2: // root 책갈피
@@ -203,6 +234,74 @@ public class BizNoteListFragment extends Fragment {
                         menu.addMenuItem(bMarkItem);
                         menu.addMenuItem(blankItem);
                         break;
+                    case 5: //원격지 PC,Android 파일
+                        detailItem = new SwipeMenuItem(getActivity());
+                        detailItem.setBackground(R.color.baseColor);
+                        detailItem.setWidth(dp2px(80));
+                        detailItem.setIcon(R.drawable.ico_18dp_contextmenu_info);
+                        detailItem.setTitle("속성보기");
+                        detailItem.setTitleSize(12);
+                        detailItem.setTitleColor(R.color.darkGray);
+
+                        downloadItem = new SwipeMenuItem(getActivity());
+                        downloadItem.setBackground(R.color.baseColor);
+                        downloadItem.setWidth(dp2px(80));
+                        downloadItem.setIcon(R.drawable.ico_18dp_contextmenu_dwld);
+                        downloadItem.setTitle("다운로드");
+                        downloadItem.setTitleSize(12);
+                        downloadItem.setTitleColor(R.color.darkGray);
+
+                        gigaNasItem = new SwipeMenuItem(getActivity());
+                        gigaNasItem.setBackground(R.color.baseColor);
+                        gigaNasItem.setWidth(dp2px(80));
+                        gigaNasItem.setIcon(R.drawable.ico_18dp_contextmenu_send);
+                        gigaNasItem.setTitle("GiGA NAS로\n 보내기");
+                        gigaNasItem.setTitleSize(10);
+                        gigaNasItem.setTitleColor(R.color.darkGray);
+
+                        blankItem = new SwipeMenuItem(getActivity());
+                        blankItem.setBackground(R.color.baseColor);
+                        blankItem.setWidth(dp2px(75));
+
+                        menu.addMenuItem(detailItem);
+                        menu.addMenuItem(downloadItem);
+                        menu.addMenuItem(gigaNasItem);
+                        menu.addMenuItem(blankItem);
+                        break;
+                    case 6: //NAS 파일
+                        detailItem = new SwipeMenuItem(getActivity());
+                        detailItem.setBackground(R.color.baseColor);
+                        detailItem.setWidth(dp2px(80));
+                        detailItem.setIcon(R.drawable.ico_18dp_contextmenu_info);
+                        detailItem.setTitle("속성보기");
+                        detailItem.setTitleSize(12);
+                        detailItem.setTitleColor(R.color.darkGray);
+
+                        downloadItem = new SwipeMenuItem(getActivity());
+                        downloadItem.setBackground(R.color.baseColor);
+                        downloadItem.setWidth(dp2px(80));
+                        downloadItem.setIcon(R.drawable.ico_18dp_contextmenu_dwld);
+                        downloadItem.setTitle("다운로드");
+                        downloadItem.setTitleSize(12);
+                        downloadItem.setTitleColor(R.color.darkGray);
+
+                        gigaNasItem = new SwipeMenuItem(getActivity());
+                        gigaNasItem.setBackground(R.color.baseColor);
+                        gigaNasItem.setWidth(dp2px(80));
+                        gigaNasItem.setIcon(R.drawable.ico_18dp_contextmenu_send);
+                        gigaNasItem.setTitle("GiGA NAS로\n 보내기");
+                        gigaNasItem.setTitleSize(10);
+                        gigaNasItem.setTitleColor(R.color.darkGray);
+
+                        blankItem = new SwipeMenuItem(getActivity());
+                        blankItem.setBackground(R.color.baseColor);
+                        blankItem.setWidth(dp2px(75));
+
+                        menu.addMenuItem(detailItem);
+                        menu.addMenuItem(downloadItem);
+                        menu.addMenuItem(gigaNasItem);
+                        menu.addMenuItem(blankItem);
+                        break;
                 }
             }
         };
@@ -214,6 +313,7 @@ public class BizNoteListFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
                 item = mListData.get(position);
+                String command = "fagMent";
                 swipeMenu = menu;
                 mIndex = position;
                 View view = mAdapter.getViewByPosition(position,mListView);
@@ -230,11 +330,17 @@ public class BizNoteListFragment extends Fragment {
                                         break;
                                 }
                                 break;
-                            case 1: // 파일
+                            case 1: // 내 디바이스
                                 switch (index) {
-                                    case 0: // 속성보기
+                                    case 0: // 파일속성
                                         DrawerLayoutViewActivity dlv = (DrawerLayoutViewActivity) getActivity();
                                         dlv.intentNoteFileAttrViewActivity(item);
+                                        break;
+                                    case 1: // 앱 실행
+                                        FileViewService.viewFile(context, item.get("foldrWholePathNm"), item.get("fileNm"));
+                                        break;
+                                    case 2: //GIGA NAS로 내보내기
+                                        ((DrawerLayoutViewActivity) context).intentToActivity(item, item.get("osCd"), item.get("devUuid"), command);
                                         break;
                                 }
                                 break;
@@ -254,6 +360,62 @@ public class BizNoteListFragment extends Fragment {
                                             }
                                         });
                                         alert.show();
+                                        break;
+                                }
+                                break;
+                            case 5: // 원격지 PC/Android
+                                switch (index) {
+                                    case 0: // 속성보기
+                                        DrawerLayoutViewActivity dlv = (DrawerLayoutViewActivity) getActivity();
+                                        dlv.intentNoteFileAttrViewActivity(item);
+                                        break;
+                                    case 1: // 다운로드
+
+                                        if (item.get("nasSynchYn").equals("Y")) {
+                                            new FileDownloadThread(context).execute(item.get("foldrWholePathNm"), item.get("fileNm"), item.get("devUuid"), "N"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                                            break;
+                                        } else {
+                                            ComndQueueVO comndQueueVO = new ComndQueueVO();
+                                            if (item.get("osCd").equals("A")) { // osCd = W, A 분기 처리
+                                                comndQueueVO.setComnd("RALA");
+                                                comndQueueVO.setFromOsCd("A");
+                                            }
+                                            if (item.get("osCd").equals("W")) {
+                                                comndQueueVO.setComnd("RWLA");
+                                                comndQueueVO.setFromOsCd("W");
+                                            }
+                                            comndQueueVO.setFromUserId(userId);
+                                            comndQueueVO.setFromFoldr(item.get("foldrWholePathNm"));
+                                            comndQueueVO.setFromFileNm(item.get("fileNm"));
+                                            Object objFileId = item.get("fileId");
+                                            comndQueueVO.setFromFileId(objFileId.toString());
+                                            comndQueueVO.setFromDevUuid(item.get("devUuid"));
+                                            comndQueueVO.setToFoldr("/Mobile");
+                                            comndQueueVO.setToOsCd("A");
+                                            comndQueueVO.setToDevUuid(myDevUuid);
+                                            comndQueueVO.setComndOsCd("A");
+                                            comndQueueVO.setComndDevUuid(myDevUuid);
+
+                                            FileService.fileDownloadWebservice(comndQueueVO, context, "N");
+
+                                            break;
+                                        }
+                                    case 2: // nas로 보내기
+                                        ((DrawerLayoutViewActivity) getActivity()).intentToActivity(item, item.get("osCd"), item.get("devUuid"), command);
+                                        break;
+                                }
+                                break;
+                            case 6: // NAS 파일
+                                switch (index) {
+                                    case 0: // 파일속성
+                                        DrawerLayoutViewActivity dlv = (DrawerLayoutViewActivity) getActivity();
+                                        dlv.intentNoteFileAttrViewActivity(item);
+                                        break;
+                                    case 1: // 다운로드
+                                        new FileDownloadThread(context).execute(item.get("foldrWholePathNm"), item.get("fileNm"), "", "N"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+                                        break;
+                                    case 2: //GIGA NAS로 내보내기
+                                        ((DrawerLayoutViewActivity) context).intentToActivity(item, item.get("osCd"), item.get("devUuid"), command);
                                         break;
                                 }
                                 break;
@@ -702,7 +864,7 @@ public class BizNoteListFragment extends Fragment {
 
         @Override
         public int getViewTypeCount() {
-            return 6;
+            return 9;
         }
 
         @Override
@@ -711,7 +873,18 @@ public class BizNoteListFragment extends Fragment {
             int returnPos = 0;
 
             if(getItem(position).get("fileId") != null) {
-                returnPos = 1;
+
+                if (getItem(position).get("devUuid").equals(SharedPreferenceUtil.getSharedPreference(context, "devUuid").toString())) { // 접속기기의 파일
+                    returnPos = 1;
+                } else {
+                    if (getItem(position).get("osCd").equals("W") || getItem(position).get("osCd").equals("A")) {  //접속기기 외 PC
+                        returnPos = 5;
+                    }else if (getItem(position).get("osCd").equals("G")) { //GIGANAS
+                        returnPos = 6;
+                    }
+                }
+
+
             }else if(getItem(position).get("bookMark") != null){
                 if(getItem(position).get("noteNm").equals("..")){
                     returnPos = 2;
@@ -828,6 +1001,56 @@ public class BizNoteListFragment extends Fragment {
                     holder.devNm.setText(mData.get("devNm"));
                     Object obj = mData.get("fileId");
                 }
+
+                convertView.findViewById(R.id.dir_item_area).setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        itemArea = getItem(position);
+
+                        if (itemArea.get("fileId") != null) {
+
+                            if (itemArea.get("osCd").equals("G")) {
+
+                                new FileDownloadThread(context).execute(itemArea.get("foldrWholePathNm"), itemArea.get("fileNm"), itemArea.get("devUuid"), "Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+
+                            } else if (itemArea.get("devUuid").equals(myDevUuid)) {
+
+                                FileViewService.viewFile(context, itemArea.get("foldrWholePathNm"), itemArea.get("fileNm"));
+
+                            } else if (itemArea.get("nasSynchYn").equals("Y")) {
+
+                                new FileDownloadThread(context).execute(itemArea.get("foldrWholePathNm"), itemArea.get("fileNm"), itemArea.get("devUuid"), "Y"); // params = 폴더명,파일이름,디바이스Uuid,app실행여부
+
+                            } else {
+                                ComndQueueVO comndQueueVO = new ComndQueueVO();
+                                if (itemArea.get("osCd").equals("A")) { // osCd = W, A 분기 처리
+                                    comndQueueVO.setComnd("RALA");
+                                    comndQueueVO.setFromOsCd("A");
+                                }
+                                if (itemArea.get("osCd").equals("W")) {
+                                    comndQueueVO.setComnd("RWLA");
+                                    comndQueueVO.setFromOsCd("W");
+                                }
+                                comndQueueVO.setFromUserId(userId);
+                                comndQueueVO.setFromFoldr(itemArea.get("foldrWholePathNm"));
+                                comndQueueVO.setFromFileNm(itemArea.get("fileNm"));
+                                Object objFileId = itemArea.get("fileId");
+                                comndQueueVO.setFromFileId(objFileId.toString());
+                                comndQueueVO.setFromDevUuid(itemArea.get("devUuid"));
+                                comndQueueVO.setToFoldr("/Mobile");
+                                comndQueueVO.setToOsCd("A");
+                                comndQueueVO.setToDevUuid(myDevUuid);
+                                comndQueueVO.setComndOsCd("A");
+                                comndQueueVO.setComndDevUuid(myDevUuid);
+
+                                FileService.fileDownloadWebservice(comndQueueVO, context, "Y");
+                                TimerService.timerStart(itemArea.get("fileNm"), context);
+                            }
+                        }
+
+                        return false;
+                    }
+                });
 
                 return convertView;
             } catch (Exception e) {
