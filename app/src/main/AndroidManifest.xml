@@ -42,6 +42,7 @@
         <activity android:name=".TagEditActivity" />
         <activity android:name=".NoteFileAttrViewActivity" />
         <activity android:name=".BizNoteEmailRefFileViewActivity"/>
+        <activity android:name=".OpenLicenseViewActivity"/>
         <activity android:name=".PopupDevNmActivity"
             android:theme="@android:style/Theme.Dialog"
             android:screenOrientation="portrait">

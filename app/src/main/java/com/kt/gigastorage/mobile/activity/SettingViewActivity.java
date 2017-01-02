@@ -35,6 +35,7 @@ public class SettingViewActivity extends Activity {
     private ToggleButton toggleButton;
 
     private LinearLayout nameSetting;
+    private LinearLayout openLicense;
     private TextView loginId;
     private static Context context;
     private static SettingViewActivity activity;
@@ -78,6 +79,14 @@ public class SettingViewActivity extends Activity {
             @Override
             public void onClick(View view) {
                 intentNameSetting();
+            }
+        });
+        openLicense = (LinearLayout) findViewById(R.id.open_License);
+
+        openLicense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                intentOpenLisence();
             }
         });
     }
@@ -205,6 +214,11 @@ public class SettingViewActivity extends Activity {
 
     public void intentNameSetting(){
         Intent intent = new Intent(this, DevNmSettingViewActivity.class);
+        startActivity(intent);
+    }
+
+    public void intentOpenLisence(){
+        Intent intent = new Intent(this, OpenLicenseViewActivity.class);
         startActivity(intent);
     }
 }
