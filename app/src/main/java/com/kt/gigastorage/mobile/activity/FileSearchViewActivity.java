@@ -563,10 +563,15 @@ public class FileSearchViewActivity extends Activity {
                     AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
                     if(statusCode == 100){
                         List<Map<String, String>> tempData = new ArrayList<>();
+                        List<Map<String, String>> fileData = new ArrayList<>();
                         tempData = gson.fromJson(response.body().get("listData"), List.class);
-
-                        if(tempData != null) {
-                            mListData = tempData;
+                        for(int i=0; i<tempData.size(); i++){
+                            if(tempData.get(i).get("foldrYn").equals("N")){
+                                fileData.add(tempData.get(i));
+                            }
+                        }
+                        if(fileData != null) {
+                            mListData = fileData;
                             searchTotal.setText(String.valueOf(mAdapter.getCount()));
                             mAdapter.notifyDataSetChanged();
                             swipeStateList = new boolean[mListData.size()];

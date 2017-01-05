@@ -11,6 +11,7 @@ import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -60,6 +61,9 @@ public class PopupCcActivity extends Activity {
         listView = (ListView)findViewById(R.id.list_view);
         findViewById(R.id.btn_close).setOnClickListener(close);
         listView.setAdapter(mAdapter);
+        for (int i = 0; i < listView.getChildCount(); i++) {
+            ((TextView)listView.getChildAt(i)).setTextColor(getResources().getColor(R.color.baseColor));
+        }
         getRefrEmailWebservice();
     }
 
@@ -87,8 +91,19 @@ public class PopupCcActivity extends Activity {
                     if (statusCode == 100) {
                         List<Map<String,String>> data = new ArrayList<>();
                         data = gson.fromJson(response.body().get("listData"), List.class);
-                        for(int i=0; i<data.size(); i++) {
-                            mAdapter.add(data.get(i).get("emailTo").toString());
+                        if(data.size() != 0){
+                            for(int i=0; i<data.size(); i++) {
+                                if(data.get(i).get("emailTo").toString() != null){
+                                    String emailTo = data.get(i).get("emailTo").toString();
+                                    String replaceEmailTo = emailTo.replace(";","\n");
+                                    mAdapter.add(replaceEmailTo);
+                                }
+                                if(data.get(i).get("emailCc").toString() != null){
+                                    String emailCc = data.get(i).get("emailCc").toString();
+                                    String replaceEmailCc = emailCc.replace(";","\n");
+                                    mAdapter.add(replaceEmailCc);
+                                }
+                            }
                         }
                         mAdapter.notifyDataSetChanged();
                     } else if (statusCode == 400) {

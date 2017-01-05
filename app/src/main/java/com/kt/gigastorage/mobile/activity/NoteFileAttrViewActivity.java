@@ -286,7 +286,7 @@ public class NoteFileAttrViewActivity extends Activity{
                                     @Override
                                     public void onClick(View view) {
                                         Intent intent = new Intent(NoteFileAttrViewActivity.activity, PopupCcActivity.class);
-                                        intent.putExtra("emailId", emailId);
+                                        intent.putExtra("emailId", fileEmailData.get(0).get("emailId").toString());
                                         startActivity(intent);
                                     }
                                 });
